@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="running_operation" default="false"/>
+
+    <group if="$(arg running_operation)">
+
+        <!-- TELEOP -->
+        <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" args="_speed:=0.4 _turn:=0.4" name="teleop" output="screen" />
+    
+    </group>
+    <group unless="$(arg running_operation)">
+
+        <!-- DISPLAY ROBOT -->
+        <include file="$(find robot_description)/launch/v2/display-robot.launch" />
+        
+        <!-- TELEOP -->
+        <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" args="_speed:=0.4 _turn:=0.4" name="teleop" output="screen" />
+    
+    </group>
+    
+    
+</launch>

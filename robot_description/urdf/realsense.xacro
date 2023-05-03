@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <link name="realsense_link"/>
+    <joint name="base_to_camera" type="fixed">
+        <parent link="base_link"/>
+        <child link="realsense_link"/>
+        <origin xyz="0.523916 -0.012133 -0.03674" />
+    </joint>
+
+</robot>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="scan_topic" default="scan" /> 
+
+    <!-- LOAD GAZEBO AND RVIZ -->
+    <include file="$(find robot_description)/launch/v2/display-robot.launch">
+        <arg name="rviz_config_file" value="$(find robot_description)/rviz/mapping.rviz"/>
+    </include>
+
+    <!-- GMAPPING -->
+    <node name="gmapping" pkg="gmapping" type="slam_gmapping" output="screen">
+        <remap from="scan" to="$(arg scan_topic)"/>
+        <param name="delta" value="0.01"/>
+    </node>
+        
+    <!-- TELEOPERATION -->
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" args="_speed:=0.4 _turn:=0.4" name="teleop" output="screen" />
+    
+</launch>

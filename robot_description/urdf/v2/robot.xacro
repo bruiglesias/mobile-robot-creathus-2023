@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ==== GAZEBO ==== -->
+    <xacro:include filename="$(find robot_description)/gazebo/v2/plugins.gazebo" />
+
+    
+    <!-- ==== PROPERTIES ==== -->
+    <xacro:property name="ground_distance" value="0.05" />
+
+    <!-- ==== ROBOT BASE ==== -->
+    <xacro:include filename="$(find robot_description)/urdf/v2/base.xacro" />
+
+    <!-- ==== MACROS ==== -->
+    <xacro:include filename="$(find robot_description)/urdf/v2/wheel.xacro" />
+    <xacro:include filename="$(find robot_description)/urdf/v2/laser.xacro" />
+
+    <!-- ==== FRONT LEFT CASTER WHEEL ==== -->
+    <xacro:caster_wheel name="front_left" x="0.410295" y="0.24" z="-${ground_distance}" />
+
+    <!-- ==== FRONT RIGHT CASTER WHEEL ==== -->
+    <xacro:caster_wheel name="front_right" x="0.410295" y="-0.24" z="-${ground_distance}" />
+
+    <!-- ==== BACK LEFT CASTER WHEEL ==== -->
+    <xacro:caster_wheel name="back_left" x="-0.410295" y="0.24" z="-${ground_distance}" />
+
+    <!-- ==== BACK RIGHT CASTER WHEEL ==== -->
+    <xacro:caster_wheel name="back_right" x="-0.410295" y="-0.24" z="-${ground_distance}" />
+
+
+    <!-- ==== LEFT WHEEL ==== -->
+    <xacro:wheel name="left" radius="0.1" length="0.1" x="0.0" y="0.24" z="${ground_distance}" />
+
+    <!-- ==== RIGHT WHEEL ==== -->
+    <xacro:wheel name="right" radius="0.1" length="0.1" x="0.0" y="-0.24" z="${ground_distance}" />
+
+    <!-- ==== FRONT LASER ==== -->
+    <xacro:laser name="front" x="0.48" y="0.26" z="${0.266}" yaw="0.785398" />
+
+    <!-- ==== BACK LASER ==== -->
+    <xacro:laser name="back" x="-0.48" y="-0.26" z="${0.266}" yaw="-2.0944" />
+
+
+    <!-- ==== IMU ==== -->
+    <xacro:include filename="$(find robot_description)/urdf/v2/imu.xacro" />
+
+</robot>

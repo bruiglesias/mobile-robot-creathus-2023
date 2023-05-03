@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="caster_wheel" params="name x y z">
+
+        <link name="${name}_caster_link">
+            <visual>
+                <origin xyz="0 0.001 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://robot_description/meshes/caster_wheel_v2.stl" scale="1 1 1" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="green">
+                    <color rgba="0.062 0.643 0.49 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0.001 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://robot_description/meshes/caster_wheel_v2.stl" scale="1 1 1" />
+                </geometry>
+            </collision>
+            <inertial>
+                <origin xyz="0 0 0" />
+                <mass value="0.005" />
+                <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                        iyy="0.001" iyz="0.0"
+                        izz="0.001" />
+            </inertial>
+        </link>
+
+        <joint name="${name}_joint" type="fixed">
+            <parent link="base_link"/>
+            <child link="${name}_caster_link"/>
+            <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+        </joint>
+
+
+    </xacro:macro>
+</robot>
