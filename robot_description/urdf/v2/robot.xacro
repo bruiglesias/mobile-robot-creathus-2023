@@ -38,7 +38,7 @@
     <xacro:laser name="front" x="0.48" y="0.26" z="${0.266}" yaw="0.785398" />
 
     <!-- ==== BACK LASER ==== -->
-    <xacro:laser name="back" x="-0.48" y="-0.26" z="${0.266}" yaw="-2.0944" />
+    <xacro:laser name="back" x="-0.30" y="-0.26" z="${0.266}" yaw="-2.35636902" />
 
 
     <!-- ==== IMU ==== -->

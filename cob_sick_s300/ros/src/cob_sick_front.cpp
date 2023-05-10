@@ -289,13 +289,27 @@ class NodeClass
 			for(int i = 0; i < (stop_scan - start_scan); i++)
 			{
 				if(inverted)
-				{
-					laserScan.ranges[i] = vdDistM[stop_scan-1-i];
+				{	
+					if(vdDistM[stop_scan-1-i] < 0.20){
+						laserScan.ranges[i] = 10.0;
+					}
+					else
+					{
+						laserScan.ranges[i] = vdDistM[stop_scan-1-i];
+					}
+		
 					laserScan.intensities[i] = vdIntensAU[stop_scan-1-i];
 				}
 				else
 				{
-					laserScan.ranges[i] = vdDistM[start_scan + i];
+					if(vdDistM[start_scan + i] < 0.20){
+						laserScan.ranges[i] = 10.0;
+					}
+					else
+					{
+						laserScan.ranges[i] = vdDistM[start_scan + i];
+					}
+		
 					laserScan.intensities[i] = vdIntensAU[start_scan + i];
 				}
 			}
