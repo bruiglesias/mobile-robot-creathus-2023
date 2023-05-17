@@ -33,7 +33,6 @@ def callback(data):
     # right_wheel_velocity_rpm = right_wheel_velocity / (wheel_radius * 2 * math.pi) * 60
 
 
-
     # Aplicar um Multiplicador e converter para inteiro - Implementação específica
     multi = 10000
 
@@ -49,8 +48,6 @@ def callback(data):
         signal_right = 0
     elif right_wheel_velocity < 0:
         signal_right = 1
-
-    
 
    
     left_w_velocity = abs(int(left_wheel_velocity * multi))

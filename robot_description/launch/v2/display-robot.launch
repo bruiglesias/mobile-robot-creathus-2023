@@ -1,15 +1,11 @@
 <?xml version="1.0"?>
 <launch>
 
-
-    <!-- LOAD GAZEBO -->
-    <include file="$(find robot_description)/launch/v2/gazebo.launch" />
     
     <arg name="rviz_config_file" default="$(find robot_description)/rviz/spawn-robot.rviz"/>
 
     <!-- SPAWN THE ROBOT -->
     <param name="robot_description" command="xacro '$(find robot_description)/urdf/v2/robot.xacro'" />
-    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-z 1.0 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
 
     <!-- JOINT AND STATE ROBOT PUBLISERS -->
     <include file="$(find robot_description)/launch/v2/state-robot.launch" />
@@ -17,8 +13,7 @@
     <!-- IRA LASERS -->
     <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" />
     
-
     <!-- LOAD RVIZ -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_file)" required="true" />
+    <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_file)" required="true" /-->
 
 </launch>

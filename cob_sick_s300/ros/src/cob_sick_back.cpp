@@ -290,8 +290,9 @@ class NodeClass
 			{
 				if(inverted)
 				{	
-					if(vdDistM[stop_scan-1-i] < 0.20){
-						laserScan.ranges[i] = 10.0;
+					if(vdDistM[stop_scan-1-i] < 0.20)
+					{
+						laserScan.ranges[i] = vdDistM[stop_scan-1-i];
 					}
 					else
 					{
@@ -302,8 +303,9 @@ class NodeClass
 				}
 				else
 				{
-					if(vdDistM[start_scan + i] < 0.20){
-						laserScan.ranges[i] = 10.0;
+					if(vdDistM[start_scan + i] < 0.20)
+					{
+						laserScan.ranges[i] = vdDistM[start_scan + i];
 					}
 					else
 					{
