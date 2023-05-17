@@ -8,8 +8,13 @@
     <param name="robot_description" command="xacro '$(find robot_description)/urdf/v2/robot.xacro'" />
 
     <!-- JOINT AND STATE ROBOT PUBLISERS -->
-    <include file="$(find robot_description)/launch/v2/state-robot.launch" />
+   <include file="$(find robot_description)/launch/v2/state-robot.launch" />
+	  
+   <include file="$(find robot_integrations)/src/launch/sick-lasers.launch" />
 
+    <!-- START IMU -->
+    <include file="$(find chip_imu_driver)/launch/example.launch" />
+	   
     <!-- IRA LASERS -->
     <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" />
     
