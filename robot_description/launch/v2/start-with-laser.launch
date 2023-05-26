@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-
-    <!--node name="cmd_vel_to_wheel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" /-->
-
-    <include file="$(find robot_description)/launch/v2/display-robot.launch" />
-
-</launch>

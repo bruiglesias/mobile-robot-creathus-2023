@@ -14,13 +14,15 @@
    <include file="$(find robot_integrations)/src/launch/sick-lasers.launch" />
 
     <!-- START IMU -->
-    <include file="$(find chip_imu_driver)/launch/example.launch" />
+    <!--include file="$(find chip_imu_driver)/launch/example.launch" /-->
 	   
     <!-- IRA LASERS FUSION -->
     <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" />
 
     <!-- LASER ODOMETRY -->
-    <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" />
+    <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch">
+        <param name="scan" value="scan" />
+    </include>
 
     <node name="cmd_to_vel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" />
 

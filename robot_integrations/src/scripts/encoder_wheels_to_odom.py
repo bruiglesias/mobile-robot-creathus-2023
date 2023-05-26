@@ -10,8 +10,8 @@ from pyModbusTCP.client import ModbusClient
 
 def calculate_odometry(ticks_left, ticks_right, wheel_base, wheel_circumference, publish_tf=False):
     # Calcular a distância percorrida por cada roda
-    distance_left = ticks_left * wheel_circumference
-    distance_right = ticks_right * wheel_circumference
+    distance_left = ticks_left * (wheel_circumference/1000) # 1000 resolução
+    distance_right = ticks_right * (wheel_circumference/1000)
     
     # Calcular o deslocamento linear e angular do robô
     linear_displacement = (distance_left + distance_right) / 2
@@ -52,8 +52,8 @@ if __name__ == '__main__':
     publish_tf = True
 
     # Inicializar as variáveis de diâmetro da roda e comprimento da base
-    wheel_radius = 0.1 # em metros
-    wheel_base = 0.5 # distância entre as rodas em metros
+    wheel_radius = 0.1016 # em metros
+    wheel_base = 0.4 # distância entre as rodas em metros
     wheel_circumference = wheel_radius * 2 * math.pi
     
     # Inicializar as variáveis de pose e velocidade
@@ -66,25 +66,26 @@ if __name__ == '__main__':
     # Inicializar o publisher do tópico "odom"
     odom_pub = rospy.Publisher("odom", Odometry, queue_size=10)
     
-    # Ler os ticks dos encoders - Implementação espefífica
     try:
-        c = ModbusClient(host="localhost", port=1024, auto_open=True, auto_close=True)
-        regs = c.read_holding_registers(4, 6)
-        if regs:
-            ticks_left, ticks_right = regs
-        else:
-            print("Fail read values")
-    except:
+        c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
+
+        while not rospy.is_shutdown():
+
+            word1: int = c.read_holding_registers(1)[0]
+            word2: int = c.read_holding_registers(0)[0]
+            ticks_right = ctypes.c_int32((word1 << 16) | (word2 & 0xFFFF)).value
+
+            word3: int = c.read_holding_registers(5)[0]
+            word4: int = c.read_holding_registers(4)[0]
+            ticks_left = ctypes.c_int32((word3 << 16) | (word4 & 0xFFFF)).value
+            
+            # Calcular a odometria com base nos ticks dos encoders
+            x, y, theta = calculate_odometry(ticks_left, ticks_right, wheel_base, wheel_circumference, publish_tf)
+    
+            # Publicar a odometria calculada no tópico "odom"
+            publish_odometry(x, y, theta, linear_speed, angular_speed, odom_pub)
+
+    except Exception as e:
         print('Fail to connect PLC')
-    
-    # Calcular a odometria com base nos ticks dos encoders
-    x, y, theta = calculate_odometry(
-        ticks_left, ticks_right, 
-        wheel_base, wheel_circumference,
-        publish_tf
-        )
-    
-    # Publicar a odometria calculada no tópico "odom"
-    publish_odometry(x, y, theta, linear_speed, angular_speed, odom_pub)
-    
-    rospy.spin()
+        print(e)
+
