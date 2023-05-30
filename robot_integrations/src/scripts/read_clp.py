@@ -7,37 +7,10 @@ from nav_msgs.msg import Odometry
 from std_msgs.msg import Header
 from geometry_msgs.msg import Quaternion, Point, Twist
 from math import sin, cos
-
-rospy.init_node('read_value_clp')
-
-# Variáveis para armazenar os ticks dos encoders
-ticks_left = 0
-ticks_right = 0
-
-# Parâmetros do robô diferencial (ajuste de acordo com o seu robô)
-wheel_radius = 0.1016  # Raio da roda em metros
-wheel_base = 0.48  # Distância entre as rodas em metros
-encoder_resolution = 1000  # Resolução dos encoders incrementais em pulsos por rotação
-
-# Variáveis para armazenar a odometria do robô
-x = 0.0
-y = 0.0
-theta = 0.0
-
-# Variáveis para armazenar a posição anterior do robô
-prev_x = 0.0
-prev_y = 0.0
-
-# Variáveis para o cálculo do delta_t
-prev_time = rospy.Time.now()
-
-linear_speed = 0
-angular_speed = 0
-
-
+import math
 
 def calculate_odometry():
-    global ticks_left, ticks_right, x, y, theta, prev_x, prev_y, prev_time
+    global ticks_left, ticks_right, x, y, theta, prev_x, prev_y, prev_time, prev_theta
     global linear_speed, angular_speed
 
     # Calcular a distância percorrida por cada roda
@@ -56,19 +29,17 @@ def calculate_odometry():
     # Atualizar a posição e orientação do robô
     delta_x = delta_s * math.cos(theta)
     delta_y = delta_s * math.sin(theta)
-    x = prev_x + delta_x
-    y = prev_y + delta_y
-    theta += delta_theta
+    x = delta_x
+    y = delta_y
+    theta = delta_theta
+    
+    linear_speed = (delta_x - prev_x ) / delta_t
+    angular_speed = (delta_theta - prev_theta) / delta_t
 
     # Atualizar a posição anterior do robô
     prev_x = x
     prev_y = y
-
-    # Ajustar a velocidade linear e angular com base nos dados dos encoders
-    linear_speed = delta_s / delta_t
-    angular_speed = delta_theta / delta_t
-
-       
+    prev_theta = theta   
 
 def publish_odometry():
     global x, y, theta, linear_speed, angular_speed
@@ -93,7 +64,43 @@ def publish_odometry():
 
 if __name__ == '__main__':
 
-      
+    rospy.init_node('read_value_clp')
+
+
+
+    # Variáveis para armazenar os ticks dos encoders
+    global ticks_left, ticks_right
+    ticks_left = 0
+    ticks_right = 0
+
+    # Parâmetros do robô diferencial (ajuste de acordo com o seu robô)
+
+    global wheel_radius, wheel_base, encoder_resolution
+    wheel_radius = 0.1016  # Raio da roda em metros
+    wheel_base = 0.48  # Distância entre as rodas em metros
+    encoder_resolution = 1000  # Resolução dos encoders incrementais em pulsos por rotação
+
+    # Variáveis para armazenar a odometria do robô
+    global x, y, theta
+    x = 0.0
+    y = 0.0
+    theta = 0.0
+
+    # Variáveis para armazenar a posição anterior do robô
+    global prev_x, prev_y, prev_theta
+    prev_x = 0.0
+    prev_y = 0.0
+    prev_theta = 0.0
+
+    # Variáveis para o cálculo do delta_t
+    global prev_time
+    prev_time = rospy.Time.now()
+
+    global linear_speed, angular_speed
+    linear_speed = 0
+    angular_speed = 0
+
+
     # Ler os ticks dos encoders - Implementação espefífica
     try:
         c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
@@ -110,8 +117,8 @@ if __name__ == '__main__':
             ticks_encoder_2 = ctypes.c_int32((word_5 << 16) | (word_4 & 0xFFFF)).value
             
             
-            ticks_left = 0
-            ticks_right = 0
+            ticks_left = ticks_encoder_1
+            ticks_right = ticks_encoder_2
 
             calculate_odometry()
 
@@ -127,4 +134,3 @@ if __name__ == '__main__':
     except Exception as e:
         print('Fail to connect PLC')
         print(e)
-    
