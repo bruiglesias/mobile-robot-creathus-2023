@@ -13,7 +13,9 @@ from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 # Parameters
 wheel_track = 0.24
 wheel_radius = 0.1016
-TPR = 1000
+TPR_L = 1000
+TPR_R = 1916
+
 left_ticks = 0
 right_ticks = 0
 last_left_ticks = 0
@@ -39,8 +41,8 @@ def encoder_reader(c):
     word_4: int = c.read_holding_registers(4)[0]
     ticks_encoder_2 = ctypes.c_int32((word_5 << 16) | (word_4 & 0xFFFF)).value
     # print(ticks_encoder_1, ticks_encoder_2)
-    left_ticks = ticks_encoder_1
-    right_ticks = ticks_encoder_2
+    left_ticks = ticks_encoder_2
+    right_ticks = ticks_encoder_1
 
 
 rospy.init_node('odometry_publisher')
@@ -66,8 +68,8 @@ try:
 
         delta_L = left_ticks - last_left_ticks
         delta_R = right_ticks - last_right_ticks
-        dl = 2 * pi * wheel_radius * delta_L / TPR
-        dr = 2 * pi * wheel_radius * delta_R / TPR
+        dl = 2 * pi * wheel_radius * delta_L / TPR_L
+        dr = 2 * pi * wheel_radius * delta_R / TPR_R
         dc = (dl + dr) / 2
         dt = (current_time - last_time).to_sec()
         dth = ( dr - dl) / wheel_track

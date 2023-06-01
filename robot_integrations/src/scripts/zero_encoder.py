@@ -13,7 +13,7 @@ try:
 
     time.sleep(1)
     
-    c.write_single_register(9, 1)
+    c.write_single_register(9, 0)
 
     time.sleep(1)
 
