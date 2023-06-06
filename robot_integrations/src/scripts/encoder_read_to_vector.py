@@ -14,7 +14,7 @@ from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 wheel_radius = 0.1016
 TPR_L = 1000
 TPR_R = 1916
-PI = 3,14159265358979323846
+PI = 3.14159265358979323846
 
 left_ticks = 0
 right_ticks = 0
