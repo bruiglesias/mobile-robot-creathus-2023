@@ -2,43 +2,53 @@
   
 import rospy
 import math
-from geometry_msgs.msg import Twist
+from std_msgs.msg import Int16
+from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3Stamped, Vector3
 from pyModbusTCP.client import ModbusClient
-
-from geometry_msgs.msg import Twist
   
   
 class RobotController:
   
     def __init__(self):
-        # initialize the subscriber node now.
-        # here we deal with messages of type Twist()
-        self.image_sub = rospy.Subscriber("/cmd_vel", 
-                                          Twist, self.callback)
-        print("Initializing the instance!")
-  
-    def callback(self, Twist):
+
+        self.wheel_radius = 0.1016 # meters
+        self.wheel_base = 0.35 # meters
+
+        self.signal_left = 0
+        self.signal_right = 0
+
+        self.pub_debug_pid = rospy.Publisher('debug/pid', Vector3, queue_size=10)
         
-        # now simply display what
-        # you've received from the topic
-        rospy.loginfo(rospy.get_caller_id() + "The velocities are %s",
-                      Twist)
+        # rospy.Subscriber("/odom_imu_encoder",Odometry, self.callbackOdom, queue_size = 10)
+        rospy.Subscriber("/data/enconder", Vector3Stamped, self.callbackEncoder, queue_size = 10)
+
+        rospy.Subscriber("/cmd_vel", Twist, self.callbackCmdVel, queue_size = 10)
+  
+    def callbackCmdVel(self, Twist):
+        
+        rospy.loginfo(rospy.get_caller_id() + "The velocities are %s", Twist)
+        print('Callback executed!')
+
+    def callbackEncoder(self, Vector3Stamped):
+        
+        rospy.loginfo(rospy.get_caller_id() + "The velocities are %s", Vector3Stamped)
         print('Callback executed!')
   
   
-def main():
-    # create a subscriber instance
-    sub = basic_subscriber()
-      
-    # follow it up with a no-brainer sequence check
-    print('Currently in the main function...')
-      
-    # initializing the subscriber node
-    rospy.init_node('listener', anonymous=True)
-    rospy.spin()
-  
-if __name__ == '__main__':
+def main(args):
+    # initializing node
+    rospy.init_node('robot_controller', log_level=rospy.DEBUG, anonymous=True)
+
+    print('Call main function...')
+    controller = RobotController()
+
     try:
-        main()
+        rospy.spin()
+    except KeyboardInterrupt:
+        print("ShutDown")
+
+if __name__=='__main__':
+    try:
+        main(sys.argv)
     except rospy.ROSInterruptException:
         pass
