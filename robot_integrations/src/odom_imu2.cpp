@@ -31,7 +31,7 @@ double w_encoder = 0;
 ros::Time encoder_time;
 bool init = false;
 
-void handle_vel_encoder(const geometry_msgs::Vector3Stamped& encoder) {
+void handle_encoder(const geometry_msgs::Vector3Stamped& encoder) {
   encoder_left = encoder.vector.x;
   encoder_right = encoder.vector.y;
   encoder_dt = encoder.vector.z;
@@ -124,8 +124,11 @@ int main(int argc, char** argv){
         vz = w_encoder;
       }
 
-      double delta_x = ( v_encoder * cos(th) ) * dt;
-      double delta_y = ( v_encoder * sin(th) ) * dt;
+      double vx = v_encoder * cos(th);
+      double vy = v_encoder * sin(th);
+
+      double delta_x = vx * dt;
+      double delta_y = vy * dt;
       double delta_th = vz * dt;
 
       // position and orientation
