@@ -10,8 +10,8 @@
 
 #define PI 3.14159265359
 
-double L = 0.5; // distance between axes
-double R = 0.0775; // wheel radius
+double L = 0.35; // distance between axes
+double R = 0.1016; // wheel radius
 
 double encoder_left = 0;
 double encoder_right = 0;
@@ -25,69 +25,37 @@ double gyro_vx = 0.0;
 double gyro_vy = 0.0;
 double gyro_vz = 0.0;
 
-// double gyro_x = 0.0;
-// double gyro_y = 0.0;
-// double gyro_z = 0.0;
-// double gyro_w = 0.0;
-
-double gyro_theta_x_rad = 0.0;
-double gyro_theta_y_rad = 0.0;
-double gyro_theta_z_rad = 0.0;
-
-double gyro_theta_x_deg = 0.0;
-double gyro_theta_y_deg = 0.0;
-double gyro_theta_z_deg = 0.0;
-
 double v_encoder = 0;
-double dth_encoder = 0;
+double w_encoder = 0;
 
 ros::Time encoder_time;
 bool init = false;
 
-// void handle_vel_encoder(const geometry_msgs::Vector3Stamped& encoder) {
-//   //encoder_time = encoder.header.stamp;
-//   encoder_left = encoder.vector.x;
-//   encoder_right = encoder.vector.y;
-//   encoder_dt = encoder.vector.z;
+void handle_vel_encoder(const geometry_msgs::Vector3Stamped& encoder) {
+  encoder_left = encoder.vector.x;
+  encoder_right = encoder.vector.y;
+  encoder_dt = encoder.vector.z;
 
-//   //ROS_INFO("encoder_left %lf - encoder_right %lf", encoder.vector.x, encoder.vector.y);
-// }
+  //ROS_INFO("encoder_left %lf - encoder_right %lf", encoder.vector.x, encoder.vector.y);
+}
 
 // Gyro Function from Smartphone
 void handle_gyro( const sensor_msgs::Imu::ConstPtr& msg) {
-  // gyro_x = msg->orientation.x;
-  // gyro_y = msg->orientation.y;
-  // gyro_z = msg->orientation.z;
-  // gyro_w = msg->orientation.w;
-
-  // gyro_theta_x_rad = msg->angular_velocity.x;
-  // gyro_theta_y_rad = msg->angular_velocity.y;
-  // gyro_theta_z_rad = msg->angular_velocity.z;
-
   gyro_vx = msg->angular_velocity.x;
   gyro_vy = msg->angular_velocity.y;
   gyro_vz = msg->angular_velocity.z;
 
   // gyro_vz = (msg->angular_velocity.z*PI)/180; // rad/s
 
-  // gyro_theta_x_deg = msg->linear_acceleration.x;
-  // gyro_theta_y_deg = msg->linear_acceleration.y;
-  // gyro_theta_z_deg = msg->linear_acceleration.z;
-
   acc_x = msg->linear_acceleration.x;
   acc_y = msg->linear_acceleration.y;
   acc_z = msg->linear_acceleration.z;
-
-  // ROS_INFO("CALLBACK - vz: %lf ", gyro_theta_z_rad);
-  // deg/s
-  // ROS_INFO("CALLBACK - yaw: %lf ", gyro_theta_z_deg); 
-  // ROS_INFO("Imu angular_velocity x: [%f], y: [%f], z: [%f]", msg->angular_velocity.x,msg->angular_velocity.y,msg->angular_velocity.z);
 }
 
 // Robot Differential Drive Reverse Kinematic
 void reverse_kinematics(){
   v_encoder = (encoder_left + encoder_right)/2; // linear
-  dth_encoder = (encoder_right - encoder_left)/L; // angular
+  w_encoder = (encoder_right - encoder_left)/L; // angular
 
   //ROS_INFO("reverse_kinematics - v_encoder %lf - dth_encoder %lf", v_encoder, dth_encoder);
 }
@@ -97,11 +65,10 @@ int main(int argc, char** argv){
 
   ros::NodeHandle nh;
   ros::NodeHandle nh_private_("~");
-  //ros::Subscriber gyro_sub = nh.subscribe("gyro", 50, handle_gyro);
-  // ros::Subscriber sub = nh.subscribe("/vel_encoder", 100, handle_vel_encoder);
+  ros::Subscriber enconder_sub = nh.subscribe("/data/enconder", 100, handle_encoder);
   ros::Subscriber gyro_sub = nh.subscribe("/mpu6050_imu/data", 100, handle_gyro);
 
-  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("odom_imu2", 50);
+  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("odom_imu_encoder", 50);
 
   // Crete tf - base link and Odometry
   tf::TransformBroadcaster baselink_broadcaster;
