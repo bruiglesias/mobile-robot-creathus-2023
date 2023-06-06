@@ -40,7 +40,7 @@
     <!-- ODOMETRY: IMU+ENCONDER -->
     <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen"/>
 
-    <node name="cmd_to_vel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" />
+    <!-- <node name="cmd_to_vel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" /> -->s
 
     <!-- LOAD RVIZ -->
     <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config_file)" required="true" /-->
