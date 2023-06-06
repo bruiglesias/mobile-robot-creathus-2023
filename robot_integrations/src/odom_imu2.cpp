@@ -75,7 +75,7 @@ int main(int argc, char** argv){
   tf::TransformBroadcaster odom_broadcaster;
 
   double alpha = 0.0;
-  bool use_imu = false;
+  bool use_imu = true;
   double vx = 0.0;
   double vth = 0.0;
   double dth = 0.0;
