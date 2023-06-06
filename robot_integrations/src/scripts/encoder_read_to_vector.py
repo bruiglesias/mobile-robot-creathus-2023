@@ -79,9 +79,10 @@ try:
         dr = (resolution_right * delta_R * wheel_radius) / dt # m/s
 
         encoder = Vector3Stamped()
-        encoder.x = dl
-        encoder.y = dr
-        encoder.z = dt
+        encoder.header.frame_id = "data_encoder"
+        encoder.vector.x = dl
+        encoder.vector.y = dr
+        encoder.vector.z = dt
 
         encoder_pub.publish(encoder)
 
