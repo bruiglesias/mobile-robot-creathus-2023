@@ -22,7 +22,9 @@
     <!-- LASER ODOMETRY -->
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" />
 
-    <node name="encoder_odom" pkg="robot_integrations" type="encoder_to_encoder_odom.py" />
+    <!-- <node name="encoder_odom" pkg="robot_integrations" type="encoder_to_encoder_odom.py" /> -->
+
+    <node name="encoder_odom" pkg="robot_integrations" type="encoder_read_to_vector.py" />
 
     <node name="cmd_to_vel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" />
 
