@@ -38,7 +38,7 @@
     </node>
 
     <!-- ODOMETRY: IMU+ENCONDER -->
-    <node name="odometry_hybrid" pkg="robot_integrations" type="odom_imu2.py" />
+    <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2.cpp" output= "screen"/>
 
     <node name="cmd_to_vel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" />
 

@@ -92,6 +92,8 @@ int main(int argc, char** argv){
   ros::Time current_time, last_time;
   ros::Rate r(10.0);
 
+  ROS_INFO(" [+] Init Odometry IMU + Encode...");
+
   while(nh.ok()){
 
     ros::spinOnce(); //check for incoming messages
