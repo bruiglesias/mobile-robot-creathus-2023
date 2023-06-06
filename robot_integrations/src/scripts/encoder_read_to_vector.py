@@ -49,8 +49,7 @@ def encoder_reader(c):
 rospy.init_node('encoder_publisher')
 
 encoder_pub = rospy.Publisher("/data/enconder", Vector3, queue_size=50)
-tick_pub = rospy.Publisher("/data/ticks", Vector3, queue_size=50)
-resolution_pub = rospy.Publisher("/data/resolution", Vector3, queue_size=50)
+tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=50)
 
 current_time = rospy.Time.now()
 last_time = rospy.Time.now()
@@ -71,13 +70,13 @@ try:
         delta_L = left_ticks - last_left_ticks
         delta_R = right_ticks - last_right_ticks
 
-        resolution_left = (2 * PI) / TPR_L
-        resolution_right = (2 * PI) / TPR_R
+        resolution_left = (2 * PI) / TPR_L # rad
+        resolution_right = (2 * PI) / TPR_R # rad
 
         dt = (current_time - last_time).to_sec()
 
-        dl = (resolution_left * delta_L * wheel_radius) / dt # rad/s
-        dr = (resolution_right * delta_R * wheel_radius) / dt # rad/s
+        dl = (resolution_left * delta_L * wheel_radius) / dt # m/s
+        dr = (resolution_right * delta_R * wheel_radius) / dt # m/s
 
         encoder = Vector3()
         encoder.x = dl
@@ -92,13 +91,6 @@ try:
         tick.z = dt
 
         tick_pub.publish(tick)
-
-        resolution = Vector3()
-        resolution.x = resolution_left
-        resolution.y = resolution_right
-        resolution.z = dt
-
-        resolution_pub.publish(resolution)
 
         last_left_ticks = left_ticks
         last_right_ticks = right_ticks
