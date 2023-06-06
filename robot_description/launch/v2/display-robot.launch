@@ -23,18 +23,22 @@
     <!-- <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" /> -->
 
     <!-- <node name="encoder_odom" pkg="robot_integrations" type="encoder_to_encoder_odom.py" /> -->
+    
+    <!-- DATA IMU ESP32 -->
+    <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
+        <param name="port" value="/dev/ttyUSB2"/>  
+        <param name="baud" value="57600"/>
+        <!-- rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600 -->
+    </node>
 
+    <!-- DATA ENCODER -->
     <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py">
         <param name="alpha" value="0.0" />
         <param name="use_imu" value="true" />
     </node>
 
-    <!-- rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600 -->
-
-    <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
-        <param name="port" value="/dev/ttyUSB2"/>  
-        <param name="baud" value="57600"/>
-    </node>
+    <!-- ODOMETRY: IMU+ENCONDER -->
+    <node name="odometry_hybrid" pkg="robot_integrations" type="odom_imu2.py" />
 
     <node name="cmd_to_vel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" />
 
