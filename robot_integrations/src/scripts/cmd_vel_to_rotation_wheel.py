@@ -8,8 +8,8 @@ from pyModbusTCP.client import ModbusClient
 # Inicializar as variáveis de diâmetro da roda e comprimento da base
 global wheel_radius, wheel_base
 
-wheel_radius = 0.1 # em metros
-wheel_base = 0.2032 # em metros
+wheel_radius = 0.1016 # em metros
+wheel_base = 0.35 # em metros
 
 signal_left = 0
 signal_right = 0
@@ -25,8 +25,8 @@ def callback(data):
     
 
     # Calcular a velocidade linear para cada roda
-    left_wheel_velocity = linear_velocity - (angular_velocity * wheel_base / 2)
-    right_wheel_velocity = linear_velocity + (angular_velocity * wheel_base / 2)
+    left_wheel_velocity = ( (2 * linear_velocity) - (angular_velocity * wheel_base) )/2
+    right_wheel_velocity = ( (2 * linear_velocity) + (angular_velocity * wheel_base) )/2; 
 
     # Converter a velocidade de giro para RPM (rotações por minuto)
     # left_wheel_velocity_rpm = left_wheel_velocity / (wheel_radius * 2 * math.pi) * 60

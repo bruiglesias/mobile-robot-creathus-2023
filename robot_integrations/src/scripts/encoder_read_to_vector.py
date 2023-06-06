@@ -49,7 +49,7 @@ def encoder_reader(c):
 rospy.init_node('encoder_publisher')
 
 encoder_pub = rospy.Publisher("/data/enconder", Vector3Stamped, queue_size=50)
-tick_pub = rospy.Publisher("/data/tick_encoder", Vector3Stamped, queue_size=50)
+tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=50)
 
 current_time = rospy.Time.now()
 last_time = rospy.Time.now()
