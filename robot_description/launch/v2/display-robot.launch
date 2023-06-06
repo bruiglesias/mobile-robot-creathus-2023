@@ -14,7 +14,7 @@
    <include file="$(find robot_integrations)/src/launch/sick-lasers.launch" />
 
     <!-- START IMU -->
-    <include file="$(find chip_imu_driver)/launch/example.launch" />
+    <!-- <include file="$(find chip_imu_driver)/launch/example.launch" /> -->
 	   
     <!-- IRA LASERS FUSION -->
     <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" />
