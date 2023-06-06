@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
   
 import rospy
+import sys
 import math
 from std_msgs.msg import Int16
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3Stamped, Vector3
@@ -20,19 +21,19 @@ class RobotController:
         self.pub_debug_pid = rospy.Publisher('debug/pid', Vector3, queue_size=10)
         
         # rospy.Subscriber("/odom_imu_encoder",Odometry, self.callbackOdom, queue_size = 10)
-        rospy.Subscriber("/data/enconder", Vector3Stamped, self.callbackEncoder, queue_size = 10)
+        # rospy.Subscriber("/data/enconder", Vector3Stamped, self.callbackEncoder, queue_size = 10)
 
-        rospy.Subscriber("/cmd_vel", Twist, self.callbackCmdVel, queue_size = 10)
+        rospy.Subscriber("cmd_vel", Twist, self.callbackCmdVel, queue_size = 10)
   
     def callbackCmdVel(self, Twist):
         
-        rospy.loginfo(rospy.get_caller_id() + "The velocities are %s", Twist)
-        print('Callback executed!')
+        rospy.loginfo(rospy.get_caller_id() + " Data encoder %s", Twist)
+        print('Callback cmd_vel!')
 
-    def callbackEncoder(self, Vector3Stamped):
-        
-        rospy.loginfo(rospy.get_caller_id() + "The velocities are %s", Vector3Stamped)
-        print('Callback executed!')
+#    def callbackEncoder(self, Vector3Stamped):
+#        
+#        rospy.loginfo(rospy.get_caller_id() + " The velocities are %s", Vector3Stamped)
+#        print('Callback executed!')
   
   
 def main(args):
