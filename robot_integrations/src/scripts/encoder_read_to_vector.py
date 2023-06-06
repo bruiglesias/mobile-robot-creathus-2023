@@ -8,7 +8,7 @@ import rospy
 import tf
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Int16
-from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, Vector3Stamped
+from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 
 # Parameters
 wheel_radius = 0.1016
@@ -48,7 +48,7 @@ def encoder_reader(c):
 
 rospy.init_node('encoder_publisher')
 
-encoder_pub = rospy.Publisher("/data/enconder", Vector3Stamped, queue_size=50)
+encoder_pub = rospy.Publisher("/data/enconder", Vector3, queue_size=50)
 tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=50)
 
 current_time = rospy.Time.now()

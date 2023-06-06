@@ -5,7 +5,7 @@
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
-#include <geometry_msgs/Vector3Stamped.h>
+#include <geometry_msgs/Vector3.h>
 #include <sensor_msgs/Imu.h>
 
 #define PI 3.14159265359
@@ -31,7 +31,7 @@ double w_encoder = 0;
 ros::Time encoder_time;
 bool init = false;
 
-void handle_encoder(const geometry_msgs::Vector3Stamped& encoder) {
+void handle_encoder(const geometry_msgs::Vector3& encoder) {
   encoder_left = encoder.vector.x;
   encoder_right = encoder.vector.y;
   encoder_dt = encoder.vector.z;
