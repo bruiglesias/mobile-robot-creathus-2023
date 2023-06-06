@@ -14,6 +14,7 @@ from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 wheel_radius = 0.1016
 TPR_L = 1000
 TPR_R = 1916
+PI = 3,14159265358979323846
 
 left_ticks = 0
 right_ticks = 0
@@ -49,7 +50,7 @@ rospy.init_node('encoder_publisher')
 
 encoder_pub = rospy.Publisher("/data/enconder", Vector3, queue_size=50)
 tick_pub = rospy.Publisher("/data/ticks", Vector3, queue_size=50)
-w_pub = rospy.Publisher("/data/w", Vector3, queue_size=50)
+resolution_pub = rospy.Publisher("/data/resolution", Vector3, queue_size=50)
 
 current_time = rospy.Time.now()
 last_time = rospy.Time.now()
@@ -70,16 +71,13 @@ try:
         delta_L = left_ticks - last_left_ticks
         delta_R = right_ticks - last_right_ticks
 
-        resolution_left = 2 * pi / TPR_L
-        resolution_right = 2 * pi / TPR_R
-
-        w_left = (resolution_left *  delta_L * wheel_radius) / TPR_L # rad
-        w_right = (resolution_right *  delta_R * wheel_radius) / TPR_R # rad
+        resolution_left = (2 * PI) / TPR_L
+        resolution_right = (2 * PI) / TPR_R
 
         dt = (current_time - last_time).to_sec()
 
-        dl = (resolution_left * delta_L * w_left) / dt # rad/s
-        dr = (resolution_right * delta_R * w_right) / dt # rad/s
+        dl = (resolution_left * delta_L * wheel_radius) / dt # rad/s
+        dr = (resolution_right * delta_R * wheel_radius) / dt # rad/s
 
         encoder = Vector3()
         encoder.x = dl
@@ -95,12 +93,12 @@ try:
 
         tick_pub.publish(tick)
 
-        w = Vector3()
-        w.x = w_left
-        w.y = w_right
-        w.z = dt
+        resolution = Vector3()
+        resolution.x = w_left
+        resolution.y = w_right
+        resolution.z = dt
 
-        w_pub.publish(w)
+        resolution_pub.publish(resolution)
 
         last_left_ticks = left_ticks
         last_right_ticks = right_ticks
