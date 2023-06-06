@@ -75,7 +75,7 @@ int main(int argc, char** argv){
   tf::TransformBroadcaster odom_broadcaster;
 
   double alpha = 0.0;
-  bool use_imu = true;
+  bool use_imu = false;
   double vx = 0.0;
   double vth = 0.0;
   double dth = 0.0;
@@ -104,39 +104,36 @@ int main(int argc, char** argv){
 
     }else if(init){
 
-      reverse_kinematics(); // return v_encoder and dth_encoder
+      reverse_kinematics(); // return v_encoder and w_encoder
       current_time = ros::Time::now();
       //compute odometry in a typical way given the velocities of the robot
       double dt = (current_time - last_time).toSec();
 
-      double vx = acc_x * dt;
-      double vy = acc_y * dt;
+      // double vx = acc_x * dt;
+      // double vy = acc_y * dt;
 
-      // delta position and delta orientation
-      double delta_x = vx * dt;
-      double delta_y = vy * dt;
-      double delta_th = gyro_vz * dt;
+      // // delta position and delta orientation
+      // double delta_x = vx * dt;
+      // double delta_y = vy * dt;
+      // double delta_th = gyro_vz * dt;
 
-      //ROS_INFO("DEBUG - delta_x %lf - delta_y %lf - time: %lf", delta_x, delta_y, dt);
+      if (use_imu) {
+        vz = alpha*w_encoder + (1-alpha)*gyro_vz;
+      } 
+      else {
+        vz = w_encoder;
+      }
+
+      double delta_x = ( v_encoder * cos(th) ) * dt;
+      double delta_y = ( v_encoder * sin(th) ) * dt;
+      double delta_th = vz * dt;
 
       // position and orientation
-      if (abs(delta_x) >= 0.001) {
-         x += delta_x;
-      } else {
-         x += 0;
-      }
-      if (abs(delta_y) >= 0.001) {
-         y += delta_y;
-      } else {
-         y+= 0;
-      }
+      x += delta_x;
+      y += delta_y;
       th += delta_th;
 
       // ROS_INFO("DEBUG - th: %lf - dth: %lf - dt: %lf", th, delta_th, dt);
-
-      // ROS_INFO("DEBUG - x %lf - y %lf - dth: %lf - dt: %lf", x, y, delta_th, dt);
-      //ROS_INFO("encoder_left %lf - encoder_right %lf - time: %lf", encoder_left, encoder_right, dt);
-      //ROS_INFO("DEBUG - v_encoder %lf - dth_encoder %lf", v_encoder, dth);
 
       //since all odometry is 6DOF we'll need a quaternion created from yaw
       geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
