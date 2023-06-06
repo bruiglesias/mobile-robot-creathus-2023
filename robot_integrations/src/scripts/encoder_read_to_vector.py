@@ -94,8 +94,8 @@ try:
         tick_pub.publish(tick)
 
         resolution = Vector3()
-        resolution.x = w_left
-        resolution.y = w_right
+        resolution.x = resolution_left
+        resolution.y = resolution_right
         resolution.z = dt
 
         resolution_pub.publish(resolution)
