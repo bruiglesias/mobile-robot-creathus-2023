@@ -24,10 +24,13 @@
 
     <!-- <node name="encoder_odom" pkg="robot_integrations" type="encoder_to_encoder_odom.py" /> -->
 
-    <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py" />
+    <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py">
+        <param name="alpha" value="0"/>  
+        <param name="use_imu" value="True"/>
+    </node>
 
     <!-- rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600 -->
-    
+
     <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
         <param name="port" value="/dev/ttyUSB2"/>  
         <param name="baud" value="57600"/>
