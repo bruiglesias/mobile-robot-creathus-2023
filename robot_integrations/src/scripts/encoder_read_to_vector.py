@@ -8,7 +8,7 @@ import rospy
 import tf
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Int16
-from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3Stamped
+from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3Stamped, Vector3
 
 # Parameters
 wheel_radius = 0.1016
