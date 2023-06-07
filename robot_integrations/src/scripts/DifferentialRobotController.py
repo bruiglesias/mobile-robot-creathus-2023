@@ -30,6 +30,9 @@ class DifferentialRobotController:
         self.encoder_left = 0
         self.encoder_dt = 0
 
+        self.Vl = 0
+        self.Vr = 0
+
         # Cria os assinantes para os encoders das rodas direita e esquerda
         rospy.Subscriber('/data/enconder', Vector3Stamped, self.callbackEncoder, queue_size = 1)
 
@@ -69,10 +72,6 @@ class DifferentialRobotController:
         self.encoder_dt = msg.vector.z
 
     def cmd_vel_callback(self, msg):
-
-        current_time = rospy.Time.now()
-        dt = (current_time - self.last_time).to_sec()
-
         # Obtém os valores de velocidade linear e angular a partir do comando recebido
         Vref = msg.linear.x  # Velocidade linear de referência em m/s
         Wref = msg.angular.z  # Velocidade angular de referência em rad/s
@@ -81,9 +80,10 @@ class DifferentialRobotController:
         # Vl = (2 * Vref - Wref * self.L) / (2 * self.R) # (rad/s)
         # Vr = (2 * Vref + Wref * self.L) / (2 * self.R) # (rad/s)
 
-        Vl = 2 * Vref - Wref * self.L # (m/s)
-        Vr = 2 * Vref + Wref * self.L # (m/s)
+        self.Vl = 2 * Vref - Wref * self.L # (m/s)
+        self.Vr = 2 * Vref + Wref * self.L # (m/s)
 
+    def update_controller(self):
         # Controlador de malha fechada
         error_left = Vl - self.encoder_left
         error_right = Vr - self.encoder_right
@@ -145,10 +145,17 @@ class DifferentialRobotController:
             print(f'Fail to connect PLC  Left: {left_w_velocity}  Right {right_w_velocity}')
             print(e.args)
 
-        self.last_time = current_time
+        
 
     def run(self):
         while not rospy.is_shutdown():
+            current_time = rospy.Time.now()
+            dt = (current_time - self.last_time).to_sec()
+
+            update_controller()
+
+            self.last_time = current_time
+
             # Aguarda a próxima iteração
             self.rate.sleep()
 
