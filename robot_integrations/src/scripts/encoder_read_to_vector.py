@@ -11,7 +11,7 @@ from std_msgs.msg import Int16
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3Stamped, Vector3
 
 # Parameters
-wheel_radius = 0.1016
+R = 0.1016
 TPR_L = 1000
 TPR_R = 1916
 PI = 3.14159265358979323846
@@ -48,13 +48,13 @@ def encoder_reader(c):
 
 rospy.init_node('encoder_publisher')
 
-encoder_pub = rospy.Publisher("/data/enconder", Vector3Stamped, queue_size=50)
-tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=50)
+encoder_pub = rospy.Publisher("/data/enconder", Vector3Stamped, queue_size=1)
+tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=1)
 
 current_time = rospy.Time.now()
 last_time = rospy.Time.now()
 
-r = rospy.Rate(10)
+r = rospy.Rate(100)  # 100 Hz (cada 10 ms)
 
 
 try: 
@@ -75,8 +75,8 @@ try:
 
         dt = (current_time - last_time).to_sec()
 
-        dl = (resolution_left * delta_L * wheel_radius) / dt # m/s
-        dr = (resolution_right * delta_R * wheel_radius) / dt # m/s
+        dl = (resolution_left * delta_L * R) / dt # m/s
+        dr = (resolution_right * delta_R * R) / dt # m/s
 
         encoder = Vector3Stamped()
         encoder.header.frame_id = "data_encoder"
