@@ -54,7 +54,7 @@ class DifferentialRobotController:
         # Inciar conexão com CLP
         self.c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
 
-        self.last_time = 0
+        self.last_time = rospy.Time.now()
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita
