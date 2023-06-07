@@ -120,12 +120,12 @@ class DifferentialRobotController:
 
         if Vcontrol_left > 0:
             self.signal_left = 0
-        elif left_wheel_velocity < 0:
+        elif Vcontrol_left < 0:
             self.signal_left = 1
 
         if Vcontrol_right > 0:
             self.signal_right = 0
-        elif right_wheel_velocity < 0:
+        elif Vcontrol_right < 0:
             self.signal_right = 1
 
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
