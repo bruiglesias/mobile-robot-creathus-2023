@@ -71,7 +71,7 @@ class DifferentialRobotController:
         self.encoder_right = msg.vector.y
         self.encoder_dt = msg.vector.z
 
-        rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", encoder_left, encoder_right)
+        rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", self.encoder_left, self.encoder_right)
 
     def cmd_vel_callback(self, msg):
         # Obtém os valores de velocidade linear e angular a partir do comando recebido
