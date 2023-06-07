@@ -23,7 +23,7 @@ class DifferentialRobotController:
         self.vel_robot_pub = rospy.Publisher('/vel_robot_controlled', Twist, queue_size=1)
 
         # Define a taxa de atualização em Hz
-        self.rate = rospy.Rate(100)  # 100 Hz (cada 10 ms)
+        self.rate = rospy.Rate(50)  # 100 Hz (cada 10 ms)
 
         # Inicializa os valores dos encoders das rodas direita e esquerda
         self.encoder_right = 0
