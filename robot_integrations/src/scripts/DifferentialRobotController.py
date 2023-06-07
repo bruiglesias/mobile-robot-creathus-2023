@@ -109,8 +109,8 @@ class DifferentialRobotController:
         # Publica os comandos de velocidade
         self.cmd_vel_pub.publish(cmd_vel_controlled)
 
-        left_w_velocity = abs(int(Vcontrol_left * multi))
-        right_w_velocity = abs(int(Vcontrol_right * multi))
+        left_w_velocity = abs(int(Vcontrol_left * self.multi))
+        right_w_velocity = abs(int(Vcontrol_right * self.multi))
 
         # Sinal de controle de velocidade das rodas direita e esquerda que vão para o robô
         vel_robot_controlled = Twist()
