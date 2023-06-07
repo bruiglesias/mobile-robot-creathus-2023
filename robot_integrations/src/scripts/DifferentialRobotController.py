@@ -87,8 +87,8 @@ class DifferentialRobotController:
 
     def update_controller(self):
         # Controlador de malha fechada
-        error_left = Vl - self.encoder_left
-        error_right = Vr - self.encoder_right
+        error_left = self.Vl - self.encoder_left
+        error_right = self.Vr - self.encoder_right
         
         self.error_sum_left += error_left
         self.error_sum_right += error_right
@@ -97,11 +97,11 @@ class DifferentialRobotController:
         self.error_sum_right = self.clamp(self.error_sum_right)
 
         # Implementa o controle feedforward com malha fechada
-        # Vcontrol_left = Vl + self.Kp * error_left + self.error_sum_left
-        # Vcontrol_right = Vr + self.Kp * error_right + self.error_sum_right
+        # Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left
+        # Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right
 
-        Vcontrol_left = Vl
-        Vcontrol_right = Vr
+        Vcontrol_left = self.Vl
+        Vcontrol_right = self.Vr
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
