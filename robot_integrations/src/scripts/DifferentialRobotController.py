@@ -71,6 +71,8 @@ class DifferentialRobotController:
         self.encoder_right = msg.vector.y
         self.encoder_dt = msg.vector.z
 
+        rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", encoder_left, encoder_right)
+
     def cmd_vel_callback(self, msg):
         # Obtém os valores de velocidade linear e angular a partir do comando recebido
         Vref = msg.linear.x  # Velocidade linear de referência em m/s
@@ -151,8 +153,9 @@ class DifferentialRobotController:
         while not rospy.is_shutdown():
             current_time = rospy.Time.now()
             dt = (current_time - self.last_time).to_sec()
+            rospy.loginfo("dt: %lf", dt)
 
-            update_controller()
+            self.update_controller()
 
             self.last_time = current_time
 
