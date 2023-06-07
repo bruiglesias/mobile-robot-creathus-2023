@@ -37,22 +37,18 @@ def callback(data):
     multi = 10000
 
 
-
     if left_wheel_velocity > 0:
         signal_left = 0
     elif left_wheel_velocity < 0:
         signal_left = 1
 
-
     if right_wheel_velocity > 0:
         signal_right = 0
     elif right_wheel_velocity < 0:
         signal_right = 1
-
    
     left_w_velocity = abs(int(left_wheel_velocity * multi))
     right_w_velocity = abs(int(right_wheel_velocity * multi))
-
 
     # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
     try:
