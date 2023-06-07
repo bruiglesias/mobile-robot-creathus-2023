@@ -96,6 +96,9 @@ class DifferentialRobotController:
         self.error_sum_left = self.clamp(self.error_sum_left)
         self.error_sum_right = self.clamp(self.error_sum_right)
 
+        print(f'DEBUG error_left: {error_left}  error_right {error_right} error_sum_left {self.error_sum_left} error_sum_right {self.error_sum_right}')
+
+
         # Implementa o controle feedforward com malha fechada
         Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left
         Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right
