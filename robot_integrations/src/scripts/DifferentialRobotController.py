@@ -6,6 +6,7 @@ from std_msgs.msg import Int16
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3Stamped, Vector3
 from pyModbusTCP.client import ModbusClient
 
+
 class DifferentialRobotController:
     def __init__(self):
         # Inicializa o nó do ROS
@@ -55,6 +56,9 @@ class DifferentialRobotController:
         self.c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
 
         self.last_time = rospy.Time.now()
+
+    def clamp(self, value, min_value, max_value):
+        return max(min(value, max_value), min_value)
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita

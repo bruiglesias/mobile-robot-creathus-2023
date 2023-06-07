@@ -21,14 +21,6 @@ right_ticks = 0
 last_left_ticks = 0
 last_right_ticks = 0
 
-x = 0.0
-y = 0.0
-th = 0.0
-
-vx = 0.0
-vy = 0.0
-vth = 0.0
-
 def encoder_reader(c):
     
     global left_ticks, right_ticks
