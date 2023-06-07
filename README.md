@@ -384,3 +384,18 @@ Modified
   #include "ArduinoHardware.h"
 #endif
 ```
+
+
+```
+https://github.com/akshaykulkarni07/esp32_imu
+
+https://arduino.stackexchange.com/questions/63221/remove-gravity-from-accelerometer-of-mpu-6050
+
+https://forum.arduino.cc/t/removing-gravity-from-mpu6050-data/977167
+
+https://github.com/alanprodam/hybrid_detection/blob/dev-2.0/scripts/fusion_filter_kalman.py
+
+https://github.com/akshaykulkarni07/esp32_imu/blob/master/imu_esp_ros/imu_esp_ros.ino
+
+https://github.com/alanprodam/guntherBot/blob/master/base_controller/launch/controller_base.launch
+```
