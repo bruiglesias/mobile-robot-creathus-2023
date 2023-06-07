@@ -52,8 +52,8 @@ class DifferentialRobotController:
         self.signal_left = 0
         self.signal_right = 0
 
-        self.min_value = -2
-        self.max_value = 2
+        self.min_value = -0.05
+        self.max_value = 0.05
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
@@ -96,12 +96,15 @@ class DifferentialRobotController:
         self.error_sum_left = self.clamp(self.error_sum_left)
         self.error_sum_right = self.clamp(self.error_sum_right)
 
-        print(f'DEBUG error_left: {error_left}  error_right {error_right} error_sum_left {self.error_sum_left} error_sum_right {self.error_sum_right}')
+        # print(f'DEBUG error_left: {error_left}  error_right {error_right} error_sum_left {self.error_sum_left} error_sum_right {self.error_sum_right}')
 
 
         # Implementa o controle feedforward com malha fechada
-        Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left
-        Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right
+        Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left * 0.1
+        Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right * 0.1
+
+        Vcontrol_left = self.clamp(Vcontrol_left)
+        Vcontrol_right = self.clamp(Vcontrol_right)
 
         # Vcontrol_left = self.Vl + self.Kp * error_left 
         # Vcontrol_right = self.Vr + self.Kp * error_right
