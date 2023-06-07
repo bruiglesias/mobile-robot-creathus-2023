@@ -49,6 +49,9 @@ class DifferentialRobotController:
         self.signal_left = 0
         self.signal_right = 0
 
+        self.min_value = -2
+        self.max_value = 2
+
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
 
@@ -57,8 +60,8 @@ class DifferentialRobotController:
 
         self.last_time = rospy.Time.now()
 
-    def clamp(self, value, min_value, max_value):
-        return max(min(value, max_value), min_value)
+    def clamp(self, value):
+        return max(min(value, self.max_value), self.min_value)
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita
@@ -89,8 +92,8 @@ class DifferentialRobotController:
         self.error_sum_left += error_left
         self.error_sum_right += error_right
 
-        self.error_sum_left = clamp(self.error_sum_left, -2, 2)
-        self.error_sum_right = clamp(self.error_sum_right, -2, 2)
+        self.error_sum_left = self.clamp(self.error_sum_left)
+        self.error_sum_right = self.clamp(self.error_sum_right)
 
         # Implementa o controle feedforward com malha fechada
         Vcontrol_left = Vl + self.Kp * error_left + self.error_sum_left
