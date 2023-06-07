@@ -100,8 +100,14 @@ class DifferentialRobotController:
         # Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left
         # Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right
 
-        Vcontrol_left = self.Vl + self.Kp * error_left * (0.001 * self.Vl)
-        Vcontrol_right = self.Vr + self.Kp * error_right * (0.001 * self.Vr)
+        Vcontrol_left = self.Vl + self.Kp * error_left
+        Vcontrol_right = self.Vr + self.Kp * error_right
+
+        if self.Vl == 0:
+            Vcontrol_left = 0
+
+        if self.Vr == 0:
+            Vcontrol_right = 0
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
