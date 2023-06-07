@@ -120,7 +120,7 @@ class DifferentialRobotController:
         vel_robot_controlled = Twist()
         vel_robot_controlled.linear.x = left_w_velocity  # Velocidade linear da roda direita em m/s
         vel_robot_controlled.linear.y = right_w_velocity  # Velocidade linear da roda esquerda em m/s
-        vel_robot_controlled.linear.z = dt # tempo sem segundos (s)
+        # vel_robot_controlled.linear.z = self.dt # tempo sem segundos (s)
 
         # Publica os comandos de velocidade
         self.vel_robot_pub.publish(vel_robot_controlled)
