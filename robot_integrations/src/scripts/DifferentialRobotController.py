@@ -96,8 +96,11 @@ class DifferentialRobotController:
         self.error_sum_right = self.clamp(self.error_sum_right)
 
         # Implementa o controle feedforward com malha fechada
-        Vcontrol_left = Vl + self.Kp * error_left + self.error_sum_left
-        Vcontrol_right = Vr + self.Kp * error_right + self.error_sum_right
+        # Vcontrol_left = Vl + self.Kp * error_left + self.error_sum_left
+        # Vcontrol_right = Vr + self.Kp * error_right + self.error_sum_right
+
+        Vcontrol_left = Vl
+        Vcontrol_right = Vr
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
@@ -118,6 +121,9 @@ class DifferentialRobotController:
         vel_robot_controlled.linear.y = right_w_velocity  # Velocidade linear da roda esquerda em m/s
         vel_robot_controlled.linear.z = dt # tempo sem segundos (s)
 
+        # Publica os comandos de velocidade
+        self.vel_robot_pub.publish(vel_robot_controlled)
+
         if Vcontrol_left > 0:
             self.signal_left = 0
         elif Vcontrol_left < 0:
@@ -132,7 +138,7 @@ class DifferentialRobotController:
         try:
             self.c.write_multiple_registers(10, [left_w_velocity, right_w_velocity, 
                 int(self.signal_left), int(self.signal_right)])
-            # print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {signal_left} signal_right {signal_right}')
+            print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {signal_left} signal_right {signal_right}')
         except Exception as e: 
             print(f'Fail to connect PLC  Left: {left_w_velocity}  Right {right_w_velocity}')
             print(e.args)
