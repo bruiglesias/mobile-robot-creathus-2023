@@ -46,7 +46,7 @@ tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=1)
 current_time = rospy.Time.now()
 last_time = rospy.Time.now()
 
-r = rospy.Rate(100)  # 100 Hz (cada 10 ms)
+r = rospy.Rate(50)  # 50 Hz
 
 
 try: 
