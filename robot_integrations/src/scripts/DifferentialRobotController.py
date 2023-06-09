@@ -151,11 +151,11 @@ class DifferentialRobotController:
             self.signal_right = 1
 
 
-        left_w_velocity = 200
-        right_w_velocity = 200
+        # left_w_velocity = 200
+        # right_w_velocity = 200
 
-        self.signal_left = 0
-        self.signal_right = 0
+        # self.signal_left = 0
+        # self.signal_right = 0
 
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
         try:
@@ -164,7 +164,7 @@ class DifferentialRobotController:
             c.write_multiple_registers(10, [left_w_velocity, right_w_velocity, int(self.signal_left), int(self.signal_right)])
 
 
-            # print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
+            print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
         except Exception as e: 
             print(f'Fail to connect PLC  Left: {left_w_velocity}  Right {right_w_velocity}')
             print(e.args)
