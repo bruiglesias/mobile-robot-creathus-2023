@@ -121,6 +121,9 @@ class DifferentialRobotController:
         cmd_vel_controlled.linear.y = Vcontrol_left  # Velocidade linear da roda esquerda em m/s
         cmd_vel_controlled.linear.z = self.encoder_dt # tempo sem segundos (s)
 
+        cmd_vel_controlled.angular.x = self.Vl  # Velocidade linear da roda direita em m/s
+        cmd_vel_controlled.angular.y = self.Vr  # Velocidade linear da roda esquerda em m/s
+
 
         # Publica os comandos de velocidade
         self.cmd_vel_pub.publish(cmd_vel_controlled)
