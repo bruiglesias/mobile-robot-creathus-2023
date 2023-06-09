@@ -150,6 +150,13 @@ class DifferentialRobotController:
         elif Vcontrol_right < 0:
             self.signal_right = 1
 
+
+        left_w_velocity = 200
+        right_w_velocity = 200
+
+        self.signal_left = 0
+        self.signal_right = 0
+
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
         try:
             c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
