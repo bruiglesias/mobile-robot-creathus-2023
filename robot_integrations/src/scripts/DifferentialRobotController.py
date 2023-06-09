@@ -79,11 +79,14 @@ class DifferentialRobotController:
         Wref = msg.angular.z  # Velocidade angular de referência em rad/s
 
         # Implementa a cinemática inversa para obter as velocidades das rodas
-        Vl = (2 * Vref - Wref * self.L) / (2 * self.R) # (rad/s)
-        Vr = (2 * Vref + Wref * self.L) / (2 * self.R) # (rad/s)
+        # Vl = (2 * Vref - Wref * self.L) / (2 * self.R) # (rad/s)
+        # Vr = (2 * Vref + Wref * self.L) / (2 * self.R) # (rad/s)
 
-        # Vl = (2 * Vref - Wref * self.L) / 2 # (rad/s)
-        # Vr = (2 * Vref + Wref * self.L) / 2 # (rad/s)
+        # vel_req1 = ( (2*x) - (z*L) )/2;  // Left wheel
+        # vel_req2 = ( (2*x) + (z*L) )/2;  // Right wheel
+
+        Vl = ((2 * Vref) - (Wref * self.L)) / 2 # (m/s)
+        Vr = ((2 * Vref) + (Wref * self.L)) / 2 # (m/s)
 
         print(f'DEBUG Vl: {Vl}  Vr: {Vr} ')
 
