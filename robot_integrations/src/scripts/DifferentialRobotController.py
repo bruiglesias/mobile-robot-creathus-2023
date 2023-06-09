@@ -82,13 +82,10 @@ class DifferentialRobotController:
         # Vl = (2 * Vref - Wref * self.L) / (2 * self.R) # (rad/s)
         # Vr = (2 * Vref + Wref * self.L) / (2 * self.R) # (rad/s)
 
-        # vel_req1 = ( (2*x) - (z*L) )/2;  // Left wheel
-        # vel_req2 = ( (2*x) + (z*L) )/2;  // Right wheel
+        self.Vl = ((2 * Vref) - (Wref * self.L)) / 2 # (m/s)
+        self.Vr = ((2 * Vref) + (Wref * self.L)) / 2 # (m/s)
 
-        Vl = ((2 * Vref) - (Wref * self.L)) / 2 # (m/s)
-        Vr = ((2 * Vref) + (Wref * self.L)) / 2 # (m/s)
-
-        print(f'DEBUG Vl: {Vl}  Vr: {Vr} ')
+        # print(f'DEBUG Vl: {self.Vl}  Vr: {self.Vr} ')
 
 
     def update_controller(self):
