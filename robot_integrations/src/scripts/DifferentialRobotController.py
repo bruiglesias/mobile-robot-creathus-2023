@@ -110,11 +110,11 @@ class DifferentialRobotController:
         # Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left * 0.1
         # Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right * 0.1
 
-        # Vcontrol_left = self.Vl + self.Kp * error_left 
-        # Vcontrol_right = self.Vr + self.Kp * error_right
+        Vcontrol_left = self.Vl + self.Kp * error_left 
+        Vcontrol_right = self.Vr + self.Kp * error_right
 
-        Vcontrol_left = self.Vl
-        Vcontrol_right = self.Vr
+        # Vcontrol_left = self.Vl
+        # Vcontrol_right = self.Vr
 
         Vcontrol_left = self.clamp_controll(Vcontrol_left)
         Vcontrol_right = self.clamp_controll(Vcontrol_right)

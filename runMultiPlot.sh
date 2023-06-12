@@ -13,4 +13,4 @@ docker run -it --net=host \
 	--env="XAUTHORITY=$XAUTH" \
 	--volume="$XAUTH:$XAUTH" \
 	--privileged --name \
-	container_rviz bruiglesias/noetic-multiplot bash -c "source devel/setup.bash && rosrun rqt_multiplot rqt_multiplot"  
+	container_rviz bruiglesias/noetic-multiplot bash -c "rosrun rqt_multiplot rqt_multiplot"  
