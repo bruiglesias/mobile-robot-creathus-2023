@@ -91,7 +91,7 @@ class DifferentialRobotController:
         self.Vl = ((2 * Vref) - (Wref * self.L)) / 2 # (m/s)
         self.Vr = ((2 * Vref) + (Wref * self.L)) / 2 # (m/s)
 
-        # print(f'DEBUG Vl: {self.Vl}  Vr: {self.Vr} ')
+        print(f'DEBUG Vl: {self.Vl}  Vr: {self.Vr} ')
 
     def update_controller(self):
         # Controlador de malha fechada
