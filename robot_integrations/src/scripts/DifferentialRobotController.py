@@ -69,7 +69,7 @@ class DifferentialRobotController:
         return max(min(value, self.max_value_error), self.min_value_error)
 
     def clamp_controll(self, value):
-        return max(min(value, self.max_value_controll), self.max_value_controll)
+        return max(min(value, self.max_value_controll), self.min_value_controll)
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita
@@ -91,7 +91,7 @@ class DifferentialRobotController:
         self.Vl = ((2 * Vref) - (Wref * self.L)) / 2 # (m/s)
         self.Vr = ((2 * Vref) + (Wref * self.L)) / 2 # (m/s)
 
-        print(f'DEBUG Vl: {self.Vl}  Vr: {self.Vr} ')
+        # print(f'DEBUG Vl: {self.Vl}  Vr: {self.Vr} ')
 
     def update_controller(self):
         # Controlador de malha fechada
@@ -174,7 +174,7 @@ class DifferentialRobotController:
             c.write_multiple_registers(10, [left_w_velocity, right_w_velocity, int(self.signal_left), int(self.signal_right)])
 
 
-            # print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
+            print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
         except Exception as e: 
             print(f'Fail to connect PLC  Left: {left_w_velocity}  Right {right_w_velocity}')
             print(e.args)
