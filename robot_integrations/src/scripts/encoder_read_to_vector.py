@@ -23,9 +23,7 @@ last_right_ticks = 0
 
 # Parâmetros do filtro de média móvel
 filter_window_size = 5  # Tamanho da janela do filtro
-# control_history = [0] * filter_window_size  # Histórico dos valores de controle
-
-control_history = [0, 0, 0, 0, 0]
+control_history = [0] * filter_window_size  # Histórico dos valores de controle
 
 def apply_filter(value):
 
@@ -39,8 +37,6 @@ def apply_filter(value):
 
     # Calcula a média dos valores de controle
     filtered_value = sum(control_history) / filter_window_size
-
-    print(filtered_value)
 
     return filtered_value
 
