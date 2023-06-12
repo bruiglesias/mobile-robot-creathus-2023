@@ -97,8 +97,8 @@ try:
         encoder_pub.publish(encoder)
 
         # Aplica o filtro de média móvel aos valores de encoder
-        vel_encoder_left_filtered = self.apply_filter(dl)
-        vel_enconder_right_filtered = self.apply_filter(dr)
+        vel_encoder_left_filtered = apply_filter(dl)
+        vel_enconder_right_filtered = apply_filter(dr)
 
         # Publica os valores velocidade das rodas direita e esquerda filtrados
         encoder_filtered = Twist()
