@@ -52,11 +52,11 @@ class DifferentialRobotController:
         self.signal_left = 0
         self.signal_right = 0
 
-        self.min_value_error = -0.05
-        self.max_value_error = 0.05
+        self.min_value_error = -0.08
+        self.max_value_error = 0.08
 
-        self.min_value_controll = -0.05
-        self.max_value_controll = 0.05
+        self.min_value_controll = -0.08
+        self.max_value_controll = 0.08
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
