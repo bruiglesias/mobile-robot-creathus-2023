@@ -150,12 +150,12 @@ class DifferentialRobotController:
         # Publica os comandos de velocidade
         self.vel_robot_pub.publish(vel_robot_controlled)
 
-        if Vcontrol_left > 0:
+        if self.Vl > 0:
             self.signal_left = 0
         elif Vcontrol_left < 0:
             self.signal_left = 1
 
-        if Vcontrol_right > 0:
+        if self.Vr > 0:
             self.signal_right = 0
         elif Vcontrol_right < 0:
             self.signal_right = 1

@@ -59,7 +59,7 @@ def encoder_reader(c):
 
 rospy.init_node('encoder_publisher')
 
-encoder_pub = rospy.Publisher("/data/enconder", Vector3Stamped, queue_size=1)
+encoder_pub = rospy.Publisher("/data/encoder", Vector3Stamped, queue_size=1)
 tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=1)
 
 encoder_filtered_pub = rospy.Publisher("/data/encoder/filtered", Twist, queue_size=1)
