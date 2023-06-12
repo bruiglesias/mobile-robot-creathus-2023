@@ -52,8 +52,11 @@ class DifferentialRobotController:
         self.signal_left = 0
         self.signal_right = 0
 
-        self.min_value = -0.05
-        self.max_value = 0.05
+        self.min_value_error = -0.05
+        self.max_value_error = 0.05
+
+        self.min_value_controll = -0.05
+        self.max_value_controll = 0.05
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
@@ -62,8 +65,11 @@ class DifferentialRobotController:
 
         self.last_time = rospy.Time.now()
 
-    def clamp(self, value):
-        return max(min(value, self.max_value), self.min_value)
+    def clamp_error(self, value):
+        return max(min(value, self.max_value_error), self.min_value_error)
+
+    def clamp_controll(self, value):
+        return max(min(value, self.max_value_controll), self.max_value_controll)
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita
@@ -87,7 +93,6 @@ class DifferentialRobotController:
 
         # print(f'DEBUG Vl: {self.Vl}  Vr: {self.Vr} ')
 
-
     def update_controller(self):
         # Controlador de malha fechada
         error_left = self.Vl - self.encoder_left
@@ -96,11 +101,10 @@ class DifferentialRobotController:
         self.error_sum_left += error_left
         self.error_sum_right += error_right
 
-        self.error_sum_left = self.clamp(self.error_sum_left)
-        self.error_sum_right = self.clamp(self.error_sum_right)
+        self.error_sum_left = self.clamp_error(self.error_sum_left)
+        self.error_sum_right = self.clamp_error(self.error_sum_right)
 
         # print(f'DEBUG error_left: {error_left}  error_right {error_right} error_sum_left {self.error_sum_left} error_sum_right {self.error_sum_right}')
-
 
         # Implementa o controle feedforward com malha fechada
         # Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left * 0.1
@@ -112,8 +116,8 @@ class DifferentialRobotController:
         Vcontrol_left = self.Vl
         Vcontrol_right = self.Vr
 
-        Vcontrol_left = self.clamp(Vcontrol_left)
-        Vcontrol_right = self.clamp(Vcontrol_right)
+        Vcontrol_left = self.clamp_controll(Vcontrol_left)
+        Vcontrol_right = self.clamp_controll(Vcontrol_right)
 
         if self.Vl == 0:
             Vcontrol_left = 0
@@ -123,12 +127,12 @@ class DifferentialRobotController:
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
-        cmd_vel_controlled.linear.x = Vcontrol_right  # Velocidade linear da roda direita em m/s
-        cmd_vel_controlled.linear.y = Vcontrol_left  # Velocidade linear da roda esquerda em m/s
+        cmd_vel_controlled.linear.x = Vcontrol_right  # Controle de Velocidade linear da roda direita em m/s
+        cmd_vel_controlled.linear.y = Vcontrol_left  # Controle de Velocidade linear da roda esquerda em m/s
         cmd_vel_controlled.linear.z = self.encoder_dt # tempo sem segundos (s)
 
-        cmd_vel_controlled.angular.x = self.Vl  # Velocidade linear da roda direita em m/s
-        cmd_vel_controlled.angular.y = self.Vr  # Velocidade linear da roda esquerda em m/s
+        cmd_vel_controlled.angular.x = self.Vl  # Referencia Velocidade linear da roda direita em m/s
+        cmd_vel_controlled.angular.y = self.Vr  # Referencia Velocidade linear da roda esquerda em m/s
 
 
         # Publica os comandos de velocidade
