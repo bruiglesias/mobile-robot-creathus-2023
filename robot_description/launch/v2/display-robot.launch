@@ -32,7 +32,7 @@
     </node>
 
     <!-- DATA ENCODER -->
-    <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py"/>
+    <!-- <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py"/> -->
 
     <!-- ODOMETRY: IMU+ENCONDER -->
     <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen">
