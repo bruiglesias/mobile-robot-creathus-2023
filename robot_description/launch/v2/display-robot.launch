@@ -32,13 +32,13 @@
     </node>
 
     <!-- DATA ENCODER -->
-    <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py">
+    <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py"/>
+
+    <!-- ODOMETRY: IMU+ENCONDER -->
+    <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen">
         <param name="alpha" value="0.0" />
         <param name="use_imu" value="true" />
     </node>
-
-    <!-- ODOMETRY: IMU+ENCONDER -->
-    <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen"/>
 
     <!-- <node name="cmd_to_vel" pkg="robot_integrations" type="cmd_vel_to_rotation_wheel.py" /> -->
 
