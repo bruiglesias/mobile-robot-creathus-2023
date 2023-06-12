@@ -22,7 +22,7 @@ last_left_ticks = 0
 last_right_ticks = 0
 
 # Parâmetros do filtro de média móvel
-filter_window_size = 5  # Tamanho da janela do filtro
+filter_window_size = 50  # Tamanho da janela do filtro
 control_history = [0] * filter_window_size  # Histórico dos valores de controle
 
 def apply_filter(value):
