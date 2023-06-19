@@ -21,25 +21,6 @@ right_ticks = 0
 last_left_ticks = 0
 last_right_ticks = 0
 
-# Parâmetros do filtro de média móvel
-filter_window_size = 120  # Tamanho da janela do filtro
-control_history = [0] * filter_window_size  # Histórico dos valores de controle
-
-def apply_filter(value):
-
-    global control_history
-
-    # Adiciona o novo valor ao histórico de valores de controle
-    control_history.append(value)
-
-    # Remove o valor mais antigo do histórico
-    control_history = control_history[1:]
-
-    # Calcula a média dos valores de controle
-    filtered_value = sum(control_history) / filter_window_size
-
-    return filtered_value
-
 def encoder_reader(c):
     
     global left_ticks, right_ticks
@@ -59,10 +40,8 @@ def encoder_reader(c):
 
 rospy.init_node('encoder_publisher')
 
-encoder_pub = rospy.Publisher("/data/encoder", Vector3Stamped, queue_size=1)
+encoder_pub = rospy.Publisher("/data/enconder", Vector3Stamped, queue_size=1)
 tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=1)
-
-encoder_filtered_pub = rospy.Publisher("/data/encoder/filtered", Twist, queue_size=1)
 
 current_time = rospy.Time.now()
 last_time = rospy.Time.now()
@@ -99,18 +78,6 @@ try:
 
         encoder_pub.publish(encoder)
 
-        # Aplica o filtro de média móvel aos valores de encoder
-        vel_encoder_left_filtered = apply_filter(dl)
-        vel_enconder_right_filtered = apply_filter(dr)
-
-        # Publica os valores velocidade das rodas direita e esquerda filtrados
-        encoder_filtered = Twist()
-        encoder_filtered.linear.x = vel_encoder_left_filtered  # Velocidade linear da roda direita em m/s
-        encoder_filtered.linear.y = vel_enconder_right_filtered  # Velocidade linear da roda esquerda em m/s
-
-        encoder_filtered_pub.publish(encoder_filtered)
-
-        # Pulblicar os ticks das rodas para debug
         tick = Vector3()
         tick.x = delta_L
         tick.y = delta_R
