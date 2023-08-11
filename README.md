@@ -11,67 +11,11 @@ drwatson_ros | [![Build Status](https://travis-ci.org/cesarhcq/drwatson.svg?bran
 ## Install dependencies and follow the installation instructions.
 
 - [x] ROS Noetic-devel: [ROS](http://wiki.ros.org/noetic/Installation/Ubuntu).
-- [x] ROS Joystick Drivers Stack: [Joystick Driver](https://github.com/ros-drivers/joystick_drivers).
 - [x] Rosserial: [Package for Arduino - Real Robot](http://wiki.ros.org/rosserial).
 - [x] Sick Scan: [Sick Scan Repository](http://wiki.ros.org/sick_scan).
 
 
-## Install Lidar Sick TiM 571
-
-The laser is configured with a static IP: 192.168.0.1. Its not recommended to use the same IP. Then, you need to configure a new IP using [SOPAS Engineering Tool](https://www.sick.com/br/pt/sopas-engineering-tool-2020/p/p367244). Follow the instructions below to configure as correct way:
-
-* Download SOPAS with Windows 7 or superior;
-  
-  * After installation, connect the Sick 571 LiDAR as recommended in the manufacturer manual. Plug the Ethernet cable on the PC and voltage supply (9-28VDC).
-
-* Now, open the SOPAS software and find a new devices. Probably you'll find LiDAR TiM 571. Select "change IP" and you can modify to any IP adress as desired. 
-  
-  * Click in the 3 vertical points and select "connect"
-
-## :penguin: Linux Machine Configuring.
-
-* After configuration of the LiDAR, open a terminal and make this:
-
-```
-cd ~/amr_creathus_ws/src/ 
-
-git clone https://github.com/SICKAG/sick_scan.git
-
-cd ~/amr_creathus_ws/
-
-catkin_make
-
-source devel/setup.bash
-```
-
-* Modify the ```sick_tim_5xx.launch file``` and set the ```arg name="hostname" default="put here the IP configured in you sick laser provided by SOPAS"```.
-
-In order to test the Sick LiDAR try this:
-```
-roslaunch wuvc_sensors sick_tim571.launch
-```
-
-If the ```launch file``` is not working, you'll need to configure manually via DHCP. Open a network box and click in "edit connections". Select Ethernet connection and edit it. Select IPV4 settings and complete the address, netmask and gateway.
-
-* Address: 192.168.1.1
-* Netmask: 255.255.255.0
-* Gateway: 0.0.0.0
-
-Done! Try to run the ```launch file``` again.
-
-## Encoder Connections
-
-The encoder model which we are using is [Encoder model](https://www.filipeflop.com/produto/sensor-de-velocidade-encoder/). We define this encoder as interrupt input (20, 21). 
-
-## Motor controller - VNH5019 pololu
-
-The motor controller used in this project is the [Pololu Dual VNH5019](https://www.pololu.com/product/2507). It is necessary to install the libraries for Arduino board. You can make the download in the [Pololu Github](https://github.com/pololu/dual-vnh5019-motor-shield). In order to unzip the library you need to find the ```skecthbook``` folder, probably in ```$ /home/user/sketchbook/libraries```. Now, restart or open the Arduino IDE to test the example code provided by ```Demo.ino```.
-
-
-
-### The robot model is based on Arlo Platform with Differential drive. (TODO) 
-
-
+### The robot model is based on Autonomous Robot Platform with Differential drive. (TODO) 
 
  If you need to add more sensors in your Robot, follow this great tutorial provided by: [Gazebo Sensors](http://gazebosim.org/tutorials/?tut=add_laser). Please, do not forget to add the .dae or .stl extension of the sensors.
 
@@ -86,9 +30,7 @@ catkin init
 
 cd ~/amr_creathus_ws/src/ 
 
-git clone https://gitlab.com/zionstec1/runner.git
-
-git clone git@github.com:ros-drivers/joystick_drivers.git
+git clone https://github.com/bruiglesias/mobile-robot-creathus-2023/tree/develop
 
 cd ~/amr_creathus_ws/
 
@@ -96,7 +38,7 @@ catkin_make
 
 ```
 
-## Start a simple simulation of the WUVC mobile Robot.
+## Start a simple test of the WUVC mobile Robot.
 
 ```
 cd ~/amr_creathus_ws/
@@ -107,26 +49,16 @@ source devel/setup.bash
 1. The first lauch is possible to verify a simple world without any obstacles, and the second world is possible to verify a modified world with objectacles
 
 ```
-roslaunch robot_gazebo first.launch
+roslaunch robot_description display-robot.launch
 ```
 
-```
-roslaunch robot_gazebo second.launch
-```
-
-2. Teleoperating the robot GuntherBot
+2. Teleoperating the robot
 
 Onpen another terminal
 
 ```
 roslaunch robot_description robot_description.launch
 ```
-
-## Real Robot - Integration Raspberry Pi 3, Arduino and ROS
-
-After simulation, you need to do the experiments in real world. It is very important to create a environment with objects and obstacles.
-
-### Communication between Arduino and Raspberry Pi 3
 
 #### Dependencies
 
@@ -274,63 +206,9 @@ rosrun rviz rviz -d ~/guntherBot_ws/src/GuntherBot/arduino_controller/rviz/rviz_
 ![guntherBOT](/images/guntherBOT_IMU.png)
 
 
-### How to run camera ros package
-
-First, you must connect a usb camera to raspberry. Verification of the usb ports is indicated to identify the possible camera.
-
-```
-ls /dev/video*
-```
-
-```
-roslaunch base_controller camera_robot.launch
-```
-
-```
-rosrun rviz rviz -d ~/guntherBot_ws/src/GuntherBot/base_controller/rviz/rviz_camera.rviz
-```
-
-### How to run Joystick Xbox Controller
-
-## Install the following dependencies:
-
-- [x] libbluetooth-dev package
-- [x] cwiid package
-
-```
-sudo apt-get install libbluetooth-dev
-```
-
-```
-sudo apt-get install libcwiid-dev
-```
-
-Now, it will need to download the following repositories listed below. For more information, see the details in the [ROS-Wiki](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick).
-
-
-1. teleop_twist_joy
-
-```
-cd ~/amr_creathus_ws/src/
-
-git clone git@github.com:ros-teleop/teleop_twist_joy.git
-
-cd ~/amr_creathus_ws/catkin_make
-```
-
-2. joystick-drivers
-
-```
-cd ~/amr_creathus_ws/src/
-
-git clone git@github.com:ros-drivers/joystick_drivers.git
-
-cd ~/amr_creathus_ws/catkin_make
-```
-
 ### WiFi connection between Robot and PC
 
-The RunnerBot has a WiFi access point ```ssid: ubiquityrobot```. 
+The Robot has a WiFi access point. 
 
 Assuming that:
 
