@@ -32,8 +32,8 @@ class EncoderPublisher:
         self.encoder_tick_pub = rospy.Publisher("/data/tick_encoder", Vector3, queue_size=1)
 
         self.c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
-        self.last_time_callback = 0
-        self.last_time = 0
+        self.last_time_callback = rospy.Time.now()
+        self.last_time = rospy.Time.now()
 
         self.rate = rospy.Rate(20)  # Taxa de publicação de 20 Hz
 
@@ -60,7 +60,7 @@ class EncoderPublisher:
         word_4: int = self.c.read_holding_registers(4)[0]
         ticks_encoder_2 = ctypes.c_int32((word_5 << 16) | (word_4 & 0xFFFF)).value
 
-        # print(ticks_encoder_1, ticks_encoder_2)
+        #print(ticks_encoder_1, ticks_encoder_2)
         # ** TODO: VERIFICAR SE OS ENCONDERS ESTÃO CORRETOS
         self.left_ticks = ticks_encoder_2
         self.right_ticks = ticks_encoder_1
@@ -102,7 +102,6 @@ class EncoderPublisher:
         while not rospy.is_shutdown():
             try:
                 current_time = rospy.Time.now()
-
                 self.encoder_callback()
 
                 delta_L = self.left_ticks - self.last_left_ticks
@@ -140,3 +139,5 @@ if __name__ == '__main__':
         encoder_publisher.run()
     except rospy.ROSInterruptException:
         pass
+    except Exception as e:
+        print(e)
