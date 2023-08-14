@@ -13,4 +13,4 @@ docker run -it --net=host \
 	--env="XAUTHORITY=$XAUTH" \
 	--volume="$XAUTH:$XAUTH" \
 	--privileged --name \
-	container_rviz bruiglesias/noetic-multiplot bash -c "export ROS_MASTER_URI=http://192.168.70.119:11311 && rosrun rqt_multiplot rqt_multiplot"  
+	container_rviz bruiglesias/noetic-multiplot bash -c "export ROS_MASTER_URI=http://192.168.144.119:11311 && rosrun rqt_multiplot rqt_multiplot"  
