@@ -12,14 +12,14 @@ class EncoderPublisher:
     def __init__(self):
         rospy.init_node('encoder_plc_publisher')
 
-        self.filter_window_size = 120
+        self.filter_window_size = 10
         self.encoder_history_left = [0] * self.filter_window_size
         self.encoder_history_right = [0] * self.filter_window_size
 
         # Parameters
         self.R = 0.1016
-        self.TPR_L = 1000
-        self.TPR_R = 1916
+        self.TPR_L = 280
+        self.TPR_R = 940
         self.PI = 3.14159265358979323846
 
         self.left_ticks = 0
@@ -35,7 +35,7 @@ class EncoderPublisher:
         self.last_time_callback = rospy.Time.now()
         self.last_time = rospy.Time.now()
 
-        self.rate = rospy.Rate(20)  # Taxa de publicação de 20 Hz
+        self.rate = rospy.Rate(10)  # Taxa de publicação de 20 Hz
 
     def apply_filter_left(self, value):
         self.encoder_history_left.append(value)
@@ -76,7 +76,7 @@ class EncoderPublisher:
         self.encoder_tick_pub.publish(tick)
         self.last_time_callback = current_time
 
-        rospy.loginfo('Raw Ticks encoder_left: %d, encoder_right: %d', self.left_ticks, self.right_ticks)
+        #rospy.loginfo('Raw Ticks encoder_left: %d, encoder_right: %d', self.left_ticks, self.right_ticks)
 
     def publish_raw_encoder(self, vel_left_raw, vel_right_raw):
 
@@ -86,7 +86,7 @@ class EncoderPublisher:
         encoder_raw.vector.y = vel_right_raw
         self.encoder_raw_pub.publish(encoder_raw)
 
-        rospy.loginfo('Raw Velocity - encoder_raw_left: %lf, encoder_raw_right: %lf', vel_left_raw, vel_right_raw)
+        #rospy.loginfo('Raw Velocity - encoder_raw_left: %lf, encoder_raw_right: %lf', vel_left_raw, vel_right_raw)
 
     def publish_filtered_encoder(self, vel_left_filtered, vel_right_filtered):
 
@@ -96,7 +96,7 @@ class EncoderPublisher:
         encoder_filtered.vector.y = vel_right_filtered
         self.encoder_filtered_pub.publish(encoder_filtered)
 
-        rospy.loginfo('Filter Velocity - encoder_filtered_left: %lf, encoder_filtered_right: %lf', vel_left_filtered, vel_right_filtered)
+        #rospy.loginfo('Filter Velocity - encoder_filtered_left: %lf, encoder_filtered_right: %lf', vel_left_filtered, vel_right_filtered)
 
     def run(self):
         while not rospy.is_shutdown():
