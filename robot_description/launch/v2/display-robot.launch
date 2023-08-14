@@ -31,9 +31,11 @@
         <!-- rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600 -->
     </node>
 
+
     <!-- DATA ENCODER -->
     <!-- <node name="encoder_data" pkg="robot_integrations" type="encoder_read_to_vector.py"/> -->
-    <node name="robot_controller" pkg="robot_integrations" type="EncoderPublisher.py" output= "screen"/>
+    <node name="encoder_filtered" pkg="robot_integrations" type="EncoderPublisher.py" output= "screen"/>
+
 
     <!-- ODOMETRY: IMU+ENCONDER -->
     <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen">
