@@ -30,7 +30,7 @@
 
 
     <!-- DATA ENCODER -->
-    <node name="encoder_filtered" pkg="robot_integrations" type="EncoderPublisher.py" output= "screen"/>
+    <node name="encoder_filtered" pkg="robot_integrations" type="EncoderSubscriber.py" output= "screen"/>
 
 
     <!-- ODOMETRY: IMU+ENCONDER -->
