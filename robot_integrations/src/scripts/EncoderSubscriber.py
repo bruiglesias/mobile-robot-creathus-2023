@@ -18,7 +18,7 @@ class EncoderPublisher:
 
         # Parameters
         self.R = 0.1016
-        self.TPR_L = 280
+        self.TPR_L = 1000
         self.TPR_R = 940
         self.PI = 3.14159265358979323846
 
