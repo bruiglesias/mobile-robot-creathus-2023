@@ -34,7 +34,8 @@ class DifferentialRobotController:
         self.Vr = 0
 
         # Cria os assinantes para os encoders das rodas direita e esquerda
-        rospy.Subscriber('/data/enconder', Vector3Stamped, self.callbackEncoder, queue_size = 1)
+        # rospy.Subscriber('/data/enconder', Vector3Stamped, self.callbackEncoder, queue_size = 1)
+        rospy.Subscriber('/data/enconder/filtered', Vector3Stamped, self.callbackEncoder, queue_size = 1)
 
         # Distância entre as rodas (base do robô diferencial)
         self.L = 0.35  # 0.35 metros
@@ -55,8 +56,8 @@ class DifferentialRobotController:
         self.min_value_error = -0.08
         self.max_value_error = 0.08
 
-        self.min_value_controll = -0.08
-        self.max_value_controll = 0.08
+        self.min_value_controll = -0.35
+        self.max_value_controll = 0.35
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
@@ -75,9 +76,9 @@ class DifferentialRobotController:
         # Atualiza a leitura do encoder da roda direita
         self.encoder_left = msg.vector.x
         self.encoder_right = msg.vector.y
-        self.encoder_dt = msg.vector.z
+        # self.encoder_dt = msg.vector.z
 
-        # rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", self.encoder_left, self.encoder_right)
+        rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", self.encoder_left, self.encoder_right)
 
     def cmd_vel_callback(self, msg):
         # Obtém os valores de velocidade linear e angular a partir do comando recebido
@@ -92,6 +93,8 @@ class DifferentialRobotController:
         self.Vr = ((2 * Vref) + (Wref * self.L)) / 2 # (m/s)
 
         # print(f'DEBUG Vl: {self.Vl}  Vr: {self.Vr} ')
+        rospy.loginfo("")
+        rospy.loginfo(" [*] Vl: %lf Vr: %lf", self.Vl, self.Vr)
 
     def update_controller(self):
         # Controlador de malha fechada
@@ -105,15 +108,16 @@ class DifferentialRobotController:
         self.error_sum_right = self.clamp_error(self.error_sum_right)
 
         # print(f'DEBUG error_left: {error_left}  error_right {error_right} error_sum_left {self.error_sum_left} error_sum_right {self.error_sum_right}')
+        rospy.loginfo(" [*] error_left: %lf error_right: %lf", error_left, error_right)
 
         # Implementa o controle feedforward com malha fechada
         # Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left * 0.1
         # Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right * 0.1
 
-        # Vcontrol_left = self.Vl + self.Kp * error_left 
-        # Vcontrol_right = self.Vr + self.Kp * error_right
+        Vcontrol_left = self.Vl + self.Kp * error_left 
+        Vcontrol_right = self.Vr + self.Kp * error_right
 
-        Vcontrol_left = self.Vl
+        # Vcontrol_left = self.Vl
         Vcontrol_right = self.Vr
 
         Vcontrol_left = self.clamp_controll(Vcontrol_left)
@@ -129,7 +133,7 @@ class DifferentialRobotController:
         cmd_vel_controlled = Twist()
         cmd_vel_controlled.linear.x = Vcontrol_right  # Controle de Velocidade linear da roda direita em m/s
         cmd_vel_controlled.linear.y = Vcontrol_left  # Controle de Velocidade linear da roda esquerda em m/s
-        cmd_vel_controlled.linear.z = self.encoder_dt # tempo sem segundos (s)
+        # cmd_vel_controlled.linear.z = self.encoder_dt # tempo sem segundos (s)
 
         cmd_vel_controlled.angular.x = self.Vl  # Referencia Velocidade linear da roda direita em m/s
         cmd_vel_controlled.angular.y = self.Vr  # Referencia Velocidade linear da roda esquerda em m/s
