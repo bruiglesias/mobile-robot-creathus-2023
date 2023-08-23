@@ -53,11 +53,11 @@ class DifferentialRobotController:
         self.signal_left = 0
         self.signal_right = 0
 
-        self.min_value_error = -0.08
-        self.max_value_error = 0.08
+        self.min_value_error = -1
+        self.max_value_error = 1
 
-        self.min_value_controll = -0.35
-        self.max_value_controll = 0.35
+        self.min_value_controll = -1
+        self.max_value_controll = 1
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
@@ -78,7 +78,7 @@ class DifferentialRobotController:
         self.encoder_right = msg.vector.y
         # self.encoder_dt = msg.vector.z
 
-        #rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", self.encoder_left, self.encoder_right)
+        rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", self.encoder_left, self.encoder_right)
 
     def cmd_vel_callback(self, msg):
         # Obtém os valores de velocidade linear e angular a partir do comando recebido
@@ -98,8 +98,8 @@ class DifferentialRobotController:
 
     def update_controller(self):
         # Controlador de malha fechada
-        error_left = self.Vl - self.encoder_left
-        error_right = self.Vr - self.encoder_right
+        error_left = float(self.Vl - self.encoder_left)
+        error_right = float(self.Vr - self.encoder_right)
 
         self.error_sum_left += error_left
         self.error_sum_right += error_right
@@ -116,9 +116,9 @@ class DifferentialRobotController:
 
         Vcontrol_left = self.Vl + self.Kp * error_left
         Vcontrol_right = self.Vr + self.Kp * error_right
-        #self.Vr = 0
+
         #Vcontrol_left = self.Vl
-        Vcontrol_right = self.Vr
+        Vcontrol_right = self.Vr *0.01
 
         Vcontrol_left = self.clamp_controll(Vcontrol_left)
         Vcontrol_right = self.clamp_controll(Vcontrol_right)
@@ -150,7 +150,7 @@ class DifferentialRobotController:
         vel_robot_controlled.linear.x = left_w_velocity  # Velocidade linear da roda direita em m/s
         vel_robot_controlled.linear.y = right_w_velocity  # Velocidade linear da roda esquerda em m/s
         # vel_robot_controlled.linear.z = self.dt # tempo sem segundos (s)
-        
+
         # Publica os comandos de velocidade
         self.vel_robot_pub.publish(vel_robot_controlled)
 
@@ -178,7 +178,7 @@ class DifferentialRobotController:
             c.write_multiple_registers(10, [left_w_velocity, right_w_velocity, int(self.signal_left), int(self.signal_right)])
 
 
-            # print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
+            #print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
         except Exception as e: 
             print(f'Fail to connect PLC  Left: {left_w_velocity}  Right {right_w_velocity}')
             print(e.args)
