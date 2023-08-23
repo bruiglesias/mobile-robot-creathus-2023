@@ -63,6 +63,7 @@ class DifferentialRobotController:
         self.multi = 10000
 
         # Inciar conexão com CLP
+        self.c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
 
         self.last_time = rospy.Time.now()
 
@@ -173,14 +174,12 @@ class DifferentialRobotController:
 
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
         try:
-            c = ModbusClient(host="192.168.0.5", port=502, unit_id=1, auto_open=True)
-
-            c.write_multiple_registers(10, [left_w_velocity, right_w_velocity, int(self.signal_left), int(self.signal_right)])
+            self.c.write_multiple_registers(10, [right_w_velocity, left_w_velocity, , int(self.signal_right), int(self.signal_left)])
 
 
             #print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
         except Exception as e: 
-            print(f'Fail to connect PLC  Left: {left_w_velocity}  Right {right_w_velocity}')
+            print(f'Fail to connect PLC Right {right_w_velocity} - Left: {left_w_velocity} ')
             print(e.args)
 
         

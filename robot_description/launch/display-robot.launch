@@ -34,10 +34,10 @@
 
 
     <!-- ODOMETRY: IMU+ENCONDER -->
-    <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen">
+<!--     <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen">
         <param name="alpha" value="0.0" />
         <param name="use_imu" value="true" />
-    </node>
+    </node> -->
 
     <!-- Differential Controller -->
     <node name="robot_controller" pkg="robot_integrations" type="DifferentialRobotController.py" output= "screen"/>
