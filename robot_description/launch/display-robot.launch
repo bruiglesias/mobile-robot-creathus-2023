@@ -22,11 +22,11 @@
     <!-- <node name="encoder_odom" pkg="robot_integrations" type="encoder_to_encoder_odom.py" /> -->
     
     <!-- DATA IMU ESP32 -->
-    <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
+<!--     <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
         <param name="port" value="/dev/ttyUSB2"/>  
-        <param name="baud" value="57600"/>
-        rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600
-    </node>
+        <param name="baud" value="57600"/> -->
+        <!-- rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600 -->
+    <!-- </node> -->
 
 
     <!-- DATA ENCODER -->
