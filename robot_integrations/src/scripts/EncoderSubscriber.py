@@ -12,7 +12,7 @@ class EncoderPublisher:
     def __init__(self):
         rospy.init_node('encoder_plc_publisher')
 
-        self.filter_window_size = 10
+        self.filter_window_size = 20
         self.encoder_history_left = [0] * self.filter_window_size
         self.encoder_history_right = [0] * self.filter_window_size
 
@@ -35,7 +35,7 @@ class EncoderPublisher:
         self.last_time_callback = rospy.Time.now()
         self.last_time = rospy.Time.now()
 
-        self.rate = rospy.Rate(20)  # Taxa de publicação de 20 Hz
+        self.rate = rospy.Rate(50)  # Taxa de publicação de 20 Hz
 
     def apply_filter_left(self, value):
         self.encoder_history_left.append(value)
