@@ -34,8 +34,7 @@ class DifferentialRobotController:
         self.Vr = 0
 
         # Cria os assinantes para os encoders das rodas direita e esquerda
-        # rospy.Subscriber('/data/enconder', Vector3Stamped, self.callbackEncoder, queue_size = 1)
-        rospy.Subscriber('/data/enconder/filtered', Vector3Stamped, self.callbackEncoder, queue_size = 1)
+        rospy.Subscriber('/data/encoder/filtered', Vector3Stamped, self.callbackEncoder, queue_size = 1)
 
         # Distância entre as rodas (base do robô diferencial)
         self.L = 0.35  # 0.35 metros
