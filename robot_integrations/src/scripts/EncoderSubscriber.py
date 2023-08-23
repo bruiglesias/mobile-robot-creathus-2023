@@ -19,7 +19,7 @@ class EncoderPublisher:
         # Parameters
         self.R = 0.1016
         self.TPR_L = 1000
-        self.TPR_R = 940
+        self.TPR_R = 680
         self.PI = 3.14159265358979323846
 
         self.left_ticks = 0
@@ -62,8 +62,8 @@ class EncoderPublisher:
 
         #print(ticks_encoder_1, ticks_encoder_2)
         # ** TODO: VERIFICAR SE OS ENCONDERS ESTÃO CORRETOS
-        self.left_ticks = ticks_encoder_2
-        self.right_ticks = ticks_encoder_1
+        self.left_ticks = ticks_encoder_1
+        self.right_ticks = ticks_encoder_2
 
         dt = (current_time - self.last_time_callback).to_sec()
 
