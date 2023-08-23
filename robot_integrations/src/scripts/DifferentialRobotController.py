@@ -174,7 +174,7 @@ class DifferentialRobotController:
 
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
         try:
-            self.c.write_multiple_registers(10, [right_w_velocity, left_w_velocity, , int(self.signal_right), int(self.signal_left)])
+            self.c.write_multiple_registers(10, [right_w_velocity, left_w_velocity, int(self.signal_right), int(self.signal_left)])
 
 
             #print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
