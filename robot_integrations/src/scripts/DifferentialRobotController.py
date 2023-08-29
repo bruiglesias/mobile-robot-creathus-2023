@@ -173,15 +173,14 @@ class DifferentialRobotController:
 
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
         try:
-            self.c.write_multiple_registers(10, [right_w_velocity, left_w_velocity, int(self.signal_right), int(self.signal_left)])
+            self.c.write_multiple_registers(10, [left_w_velocity, right_w_velocity, int(self.signal_left), int(self.signal_right)])
 
 
-            #print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
-        except Exception as e: 
+            print(f'Write in PLC: Left: {left_w_velocity}  Right {right_w_velocity} signal_left {self.signal_left} signal_right {self.signal_right}')
+        except Exception as e:
             print(f'Fail to connect PLC Right {right_w_velocity} - Left: {left_w_velocity} ')
             print(e.args)
 
-        
 
     def run(self):
         while not rospy.is_shutdown():
@@ -203,44 +202,4 @@ if __name__ == '__main__':
     except rospy.ROSInterruptException:
         pass
 
-
-#########################################################
-# class DifferentialRobotController:
-#     def __init__(self):
-#         # ...
-
-#         # Parâmetros do filtro de média móvel
-#         self.filter_window_size = 5  # Tamanho da janela do filtro
-#         self.control_history = [0] * self.filter_window_size  # Histórico dos valores de controle
-
-#         # ...
-
-#     def apply_filter(self, value):
-#         # Adiciona o novo valor ao histórico de valores de controle
-#         self.control_history.append(value)
-#         # Remove o valor mais antigo do histórico
-#         self.control_history = self.control_history[1:]
-
-#         # Calcula a média dos valores de controle
-#         filtered_value = sum(self.control_history) / self.filter_window_size
-
-#         return filtered_value
-
-#     def cmd_vel_callback(self, msg):
-#         # ...
-
-#         # Implementa o controle feedforward com malha fechada
-#         Vcontrol_right = Vr + self.Kp * error_right + self.error_sum_right
-#         Vcontrol_left = Vl + self.Kp * error_left + self.error_sum_left
-
-#         # Aplica o filtro de média móvel aos valores de controle
-#         Vcontrol_right_filtered = self.apply_filter(Vcontrol_right)
-#         Vcontrol_left_filtered = self.apply_filter(Vcontrol_left)
-
-#         # Define os comandos de velocidade das rodas direita e esquerda
-#         cmd_vel_controlled = Twist()
-#         cmd_vel_controlled.linear.x = Vcontrol_right_filtered  # Velocidade linear da roda direita em m/s
-#         cmd_vel_controlled.linear.y = Vcontrol_left_filtered  # Velocidade linear da roda esquerda em m/s
-
-#         # ...
 
