@@ -19,7 +19,7 @@ class EncoderPublisher:
         # Parameters
         self.R = 0.1016
         self.TPR_L = 680
-        self.TPR_R = 1680
+        self.TPR_R = 680
         self.PI = 3.14159265358979323846
 
         self.left_ticks = 0
