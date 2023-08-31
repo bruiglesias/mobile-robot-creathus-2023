@@ -19,7 +19,6 @@ ros::Publisher imu_pub("/mpu6050_imu/data", &imu_msg);
 bool blinkState = false;
 
 
-float scale = 0.01;
 float gx_offset = 0, gy_offset = 0, gz_offset = 0;
 float gravity [3] = {0,0,0};
 
@@ -127,7 +126,7 @@ void loop() {
 
   imu_msg.angular_velocity.x = g.gyro.x + 0.12;
   imu_msg.angular_velocity.y = g.gyro.y + 0.01;
-  imu_msg.angular_velocity.z = g.gyro.z + 0.01;
+  imu_msg.angular_velocity.z = g.gyro.z;
 
   imu_msg.linear_acceleration.x = a.acceleration.x;
   imu_msg.linear_acceleration.y = a.acceleration.y;
