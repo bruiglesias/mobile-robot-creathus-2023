@@ -105,8 +105,8 @@ class DifferentialRobotController:
         error_left = float(self.Vl - self.encoder_left)
         error_right = float(self.Vr - self.encoder_right)
 
-        self.error_sum_left += error_left
-        self.error_sum_right += error_right
+        self.error_sum_left = (self.error_sum_left + error_left)
+        self.error_sum_right = (self.error_sum_right + error_right)
 
         #self.error_sum_left = self.clamp_error(self.error_sum_left)
         #self.error_sum_right = self.clamp_error(self.error_sum_right)
