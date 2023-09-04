@@ -12,7 +12,7 @@ class EncoderPublisher:
     def __init__(self):
         rospy.init_node('encoder_plc_publisher')
 
-        self.filter_window_size = 20
+        self.filter_window_size = 50
         self.encoder_history_left = [0] * self.filter_window_size
         self.encoder_history_right = [0] * self.filter_window_size
 
@@ -35,7 +35,7 @@ class EncoderPublisher:
         self.last_time_callback = rospy.Time.now()
         self.last_time = rospy.Time.now()
 
-        self.rate = rospy.Rate(50)  # Taxa de publicação de 20 Hz
+        self.rate = rospy.Rate(100)  # Taxa de publicação de 20 Hz
 
     def apply_filter_left(self, value):
         self.encoder_history_left.append(value)
@@ -88,12 +88,13 @@ class EncoderPublisher:
 
         #rospy.loginfo('Raw Velocity - encoder_raw_left: %lf, encoder_raw_right: %lf', vel_left_raw, vel_right_raw)
 
-    def publish_filtered_encoder(self, vel_left_filtered, vel_right_filtered):
+    def publish_filtered_encoder(self, vel_left_filtered, vel_right_filtered, dt):
 
         encoder_filtered = Vector3Stamped()
         encoder_filtered.header.frame_id = "data_encoder_filtered"
         encoder_filtered.vector.x = vel_left_filtered
         encoder_filtered.vector.y = vel_right_filtered
+        encoder_filtered.vector.z = dt
         self.encoder_filtered_pub.publish(encoder_filtered)
 
         #rospy.loginfo('Filter Velocity - encoder_filtered_left: %lf, encoder_filtered_right: %lf', vel_left_filtered, vel_right_filtered)
@@ -121,7 +122,7 @@ class EncoderPublisher:
                 vel_left_filtered = self.apply_filter_left(vl)
                 vel_right_filtered = self.apply_filter_right(vr)
 
-                self.publish_filtered_encoder(vel_left_filtered, vel_right_filtered)
+                self.publish_filtered_encoder(vel_left_filtered, vel_right_filtered, dt)
 
                 self.last_left_ticks = self.left_ticks
                 self.last_right_ticks = self.right_ticks

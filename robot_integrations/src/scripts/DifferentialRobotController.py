@@ -23,7 +23,7 @@ class DifferentialRobotController:
         self.vel_robot_pub = rospy.Publisher('/vel_robot_controlled', Twist, queue_size=1)
 
         # Define a taxa de atualização em Hz
-        self.rate = rospy.Rate(50)  # 100 Hz (cada 10 ms)
+        self.rate = rospy.Rate(100)  # 100 Hz (cada 10 ms)
 
         # Inicializa os valores dos encoders das rodas direita e esquerda
         self.encoder_right = 0
@@ -43,8 +43,8 @@ class DifferentialRobotController:
         self.R = 0.1016  # 0.1016 metros
 
         # Ganho proporcional para o controle da malha fechada
-        self.Kp = 0.1
-        self.Ki = 0.01
+        self.Kp = 2
+        self.Ki = 0.4
 
         # Variáveis de erro acumulado para o controle integral
         self.error_sum_right = 0
@@ -77,7 +77,7 @@ class DifferentialRobotController:
         # Atualiza a leitura do encoder da roda direita
         self.encoder_left = msg.vector.x
         self.encoder_right = msg.vector.y
-        # self.encoder_dt = msg.vector.z
+        self.encoder_dt = msg.vector.z
 
         #rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", self.encoder_left, self.encoder_right)
 
@@ -99,8 +99,8 @@ class DifferentialRobotController:
 
     def update_controller(self):
         # Controlador de malha fechada
-        error_left = float(self.Vl - self.encoder_left)
-        error_right = float(self.Vr - self.encoder_right)
+        error_left = float((self.Vl - self.encoder_left) * self.encoder_dt)
+        error_right = float((self.Vr - self.encoder_right) * self.encoder_dt)
 
         self.error_sum_left += error_left
         self.error_sum_right += error_right
@@ -124,8 +124,8 @@ class DifferentialRobotController:
         #min_value_controll = Vl * 0.5
         #max_value_error = Vl * 0.5
 
-        Vcontrol_left = self.clamp_controll(Vcontrol_left, -abs(self.Vl*3.5), abs(self.Vl*3.5))
-        Vcontrol_right = self.clamp_controll(Vcontrol_right, -abs(self.Vr*3.5), abs(self.Vr*3.5))
+        Vcontrol_left = self.clamp_controll(Vcontrol_left, -abs(self.Vl*5), abs(self.Vl*5))
+        Vcontrol_right = self.clamp_controll(Vcontrol_right, -abs(self.Vr*5), abs(self.Vr*5))
 
         if self.Vl == 0:
             Vcontrol_left = 0
