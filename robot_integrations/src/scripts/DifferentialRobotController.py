@@ -43,8 +43,8 @@ class DifferentialRobotController:
         self.R = 0.1016  # 0.1016 metros
 
         # Ganho proporcional para o controle da malha fechada
-        self.Kp = 0.2
-        self.Ki = 1.5
+        self.Kp = 0.4
+        self.Ki = 0.2
 
         # Variáveis de erro acumulado para o controle integral
         self.error_sum_right = 0
@@ -105,11 +105,11 @@ class DifferentialRobotController:
         error_left = float(self.Vl - self.encoder_left)
         error_right = float(self.Vr - self.encoder_right)
 
-        self.error_sum_left += float(error_left * self.encoder_dt)
-        self.error_sum_right += float(error_right * self.encoder_dt)
+        self.error_sum_left += error_left
+        self.error_sum_right += error_right
 
-        self.error_sum_left = self.clamp_error(self.error_sum_left)
-        self.error_sum_right = self.clamp_error(self.error_sum_right)
+        #self.error_sum_left = self.clamp_error(self.error_sum_left)
+        #self.error_sum_right = self.clamp_error(self.error_sum_right)
 
         derivative_left = (error_left - self.prev_error_left) / (self.encoder_dt + 0.01)
         derivative_right = (error_right - self.prev_error_right) / (self.encoder_dt + 0.01)
@@ -121,21 +121,21 @@ class DifferentialRobotController:
         Vcontrol_left = self.Vl + (self.Kp * error_left) + (self.error_sum_left * self.Ki)
         Vcontrol_right = self.Vr + (self.Kp * error_right) + (self.error_sum_right * self.Ki)
 
-        # Vcontrol_left = self.Vl + self.Kp * error_left
-        # Vcontrol_right = self.Vr + self.Kp * error_right
+        #Vcontrol_left = (self.error_sum_left)
+        #Vcontrol_right = (self.error_sum_left)
 
-        #Vcontrol_left = self.Vl
-        #Vcontrol_right = self.Vr
+        Vcontrol_left = self.Vl
+        Vcontrol_right = self.Vr
 
         #min_value_controll = Vl * 0.5
         #max_value_error = Vl * 0.5
 
-        Vcontrol_left = self.clamp_controll(Vcontrol_left, -abs(self.Vl*5), abs(self.Vl*5))
-        Vcontrol_right = self.clamp_controll(Vcontrol_right, -abs(self.Vr*5), abs(self.Vr*5))
+        #Vcontrol_left = self.clamp_controll(Vcontrol_left, -abs(self.Vl*5), abs(self.Vl*5))
+        #Vcontrol_right = self.clamp_controll(Vcontrol_right, -abs(self.Vr*5), abs(self.Vr*5))
 
-        # limite 1 m/s
-        Vcontrol_left = self.clamp_controll(Vcontrol_left, self.min_value_controll, self.max_value_controll)
-        Vcontrol_right = self.clamp_controll(Vcontrol_right, self.min_value_controll, self.max_value_controll)
+        # limite 0.12 m/s
+        #Vcontrol_left = self.clamp_controll(Vcontrol_left, self.min_value_controll, self.max_value_controll)
+        #Vcontrol_right = self.clamp_controll(Vcontrol_right, self.min_value_controll, self.max_value_controll)
 
         if self.Vl == 0:
             Vcontrol_left = 0
@@ -151,7 +151,7 @@ class DifferentialRobotController:
 
         cmd_vel_controlled.angular.x = self.Vl  # Referencia Velocidade linear da roda direita em m/s
         cmd_vel_controlled.angular.y = self.Vr  # Referencia Velocidade linear da roda esquerda em m/s
-        cmd_vel_controlled.angular.z = error_right # tempo sem segundos (s)
+        cmd_vel_controlled.angular.z = self.error_sum_left # tempo sem segundos (s)
 
         # Publica os comandos de velocidade
         self.cmd_vel_pub.publish(cmd_vel_controlled)
@@ -159,6 +159,8 @@ class DifferentialRobotController:
         left_w_velocity = abs(int(Vcontrol_left * self.multi))
         right_w_velocity = abs(int(Vcontrol_right * self.multi))
 
+        #left_w_velocity = abs(int(self.Vl * self.multi))
+        #right_w_velocity = abs(int(self.Vr * self.multi))
         # Sinal de controle de velocidade das rodas direita e esquerda que vão para o robô
         vel_robot_controlled = Twist()
         vel_robot_controlled.linear.x = left_w_velocity  # Velocidade linear da roda direita em m/s
@@ -185,8 +187,8 @@ class DifferentialRobotController:
         # self.signal_left = 0
         # self.signal_right = 0
 
-        self.prev_error_left = error_left
-        self.prev_error_right = error_right
+        #self.prev_error_left = error_left
+        #self.prev_error_right = error_right
 
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
         try:
