@@ -56,8 +56,8 @@ class DifferentialRobotController:
         self.min_value_error = -1
         self.max_value_error = 1
 
-        #self.min_value_controll = -1
-        #self.max_value_controll = 1
+        self.min_value_controll = -1
+        self.max_value_controll = 1
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
@@ -126,6 +126,10 @@ class DifferentialRobotController:
 
         Vcontrol_left = self.clamp_controll(Vcontrol_left, -abs(self.Vl*5), abs(self.Vl*5))
         Vcontrol_right = self.clamp_controll(Vcontrol_right, -abs(self.Vr*5), abs(self.Vr*5))
+
+        # limite 1 m/s
+        Vcontrol_left = self.clamp_controll(Vcontrol_left, self.min_value_controll, self.max_value_controll)
+        Vcontrol_right = self.clamp_controll(Vcontrol_right, self.min_value_controll, self.max_value_controll)
 
         if self.Vl == 0:
             Vcontrol_left = 0
