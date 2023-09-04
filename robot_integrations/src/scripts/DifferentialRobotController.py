@@ -43,8 +43,8 @@ class DifferentialRobotController:
         self.R = 0.1016  # 0.1016 metros
 
         # Ganho proporcional para o controle da malha fechada
-        self.Kp = 2
-        self.Ki = 0.4
+        self.Kp = 0.2
+        self.Ki = 1.5
 
         # Variáveis de erro acumulado para o controle integral
         self.error_sum_right = 0
@@ -56,8 +56,11 @@ class DifferentialRobotController:
         self.min_value_error = -1
         self.max_value_error = 1
 
-        self.min_value_controll = -1
-        self.max_value_controll = 1
+        self.min_value_controll = -0.12
+        self.max_value_controll = 0.12
+
+        self.prev_error_left = 0
+        self.prev_error_right = 0
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
@@ -99,21 +102,24 @@ class DifferentialRobotController:
 
     def update_controller(self):
         # Controlador de malha fechada
-        error_left = float((self.Vl - self.encoder_left) * self.encoder_dt)
-        error_right = float((self.Vr - self.encoder_right) * self.encoder_dt)
+        error_left = float(self.Vl - self.encoder_left)
+        error_right = float(self.Vr - self.encoder_right)
 
-        self.error_sum_left += error_left
-        self.error_sum_right += error_right
+        self.error_sum_left += float(error_left * self.encoder_dt)
+        self.error_sum_right += float(error_right * self.encoder_dt)
 
         self.error_sum_left = self.clamp_error(self.error_sum_left)
         self.error_sum_right = self.clamp_error(self.error_sum_right)
+
+        derivative_left = (error_left - self.prev_error_left) / (self.encoder_dt + 0.01)
+        derivative_right = (error_right - self.prev_error_right) / (self.encoder_dt + 0.01)
 
         # print(f'DEBUG error_left: {error_left}  error_right {error_right} error_sum_left {self.error_sum_left} error_sum_right {self.error_sum_right}')
         # rospy.loginfo(" [*] error_left: %lf error_right: %lf", error_left, error_right)
 
         # Implementa o controle feedforward com malha fechada
-        Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left * self.Ki
-        Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right * self.Ki
+        Vcontrol_left = self.Vl + (self.Kp * error_left) + (self.error_sum_left * self.Ki)
+        Vcontrol_right = self.Vr + (self.Kp * error_right) + (self.error_sum_right * self.Ki)
 
         # Vcontrol_left = self.Vl + self.Kp * error_left
         # Vcontrol_right = self.Vr + self.Kp * error_right
@@ -178,6 +184,9 @@ class DifferentialRobotController:
 
         # self.signal_left = 0
         # self.signal_right = 0
+
+        self.prev_error_left = error_left
+        self.prev_error_right = error_right
 
         # Enviar as velocidades de giro calculadas para o PLC - Implementação específica
         try:
