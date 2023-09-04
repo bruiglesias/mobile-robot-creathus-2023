@@ -31,6 +31,44 @@ double w_encoder = 0;
 ros::Time encoder_time;
 bool init = false;
 
+double scala = 0.01;
+double offset_value = 0.02;
+const int buffer_size = 5;  // Buffer size for the moving average filter
+std::deque<double> gyro_buffer;
+
+double movingAverageFilter(double current_reading) {
+    gyro_buffer.push_back(current_reading);
+    if (gyro_buffer.size() > buffer_size) {
+        gyro_buffer.pop_front();
+    }
+
+    double sum = 0.0;
+    for (const auto& value : gyro_buffer) {
+        sum += value;
+    }
+
+    current_reading = sum / gyro_buffer.size();
+
+    if (std::abs(current_reading) < 0.05) 
+    {
+        current_reading = 0;
+    }
+    else
+    {
+      if (current_reading > 0)
+      {
+        current_reading = current_reading + 0.02;
+      }
+      else
+      {
+        current_reading = current_reading - 0.036; //direita 0.05
+      }
+      
+    }
+
+    return current_reading;
+}
+
 void handle_encoder(const geometry_msgs::Vector3Stamped& encoder) {
   encoder_left = encoder.vector.x;
   encoder_right = encoder.vector.y;
@@ -44,6 +82,10 @@ void handle_gyro( const sensor_msgs::Imu::ConstPtr& msg) {
   gyro_vx = msg->angular_velocity.x;
   gyro_vy = msg->angular_velocity.y;
   gyro_vz = msg->angular_velocity.z;
+  // gyro_vz = (msg->angular_velocity.z - scala);
+  gyro_vz = movingAverageFilter(msg->angular_velocity.z - scala);
+
+  // ROS_INFO("DEBUG - gyro_vz: %lf ", gyro_vz);
 
   // gyro_vz = (msg->angular_velocity.z*PI)/180; // rad/s
 
@@ -138,7 +180,7 @@ int main(int argc, char** argv){
       y += delta_y;
       th += delta_th;
 
-      // ROS_INFO("DEBUG - th: %lf - dth: %lf - dt: %lf", th, delta_th, dt);
+      ROS_INFO("DEBUG - th: %lf - dth: %lf - dt: %lf", th, delta_th, dt);
 
       //since all odometry is 6DOF we'll need a quaternion created from yaw
       geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);

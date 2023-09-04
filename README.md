@@ -35,7 +35,6 @@ git clone https://github.com/bruiglesias/mobile-robot-creathus-2023/tree/develop
 cd ~/amr_creathus_ws/
 
 catkin_make
-
 ```
 
 ## Start a simple test of the WUVC mobile Robot.
