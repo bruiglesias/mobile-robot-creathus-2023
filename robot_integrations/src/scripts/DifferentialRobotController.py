@@ -44,6 +44,7 @@ class DifferentialRobotController:
 
         # Ganho proporcional para o controle da malha fechada
         self.Kp = 0.1
+        self.Ki = 0.01
 
         # Variáveis de erro acumulado para o controle integral
         self.error_sum_right = 0
@@ -55,8 +56,8 @@ class DifferentialRobotController:
         self.min_value_error = -1
         self.max_value_error = 1
 
-        self.min_value_controll = -1
-        self.max_value_controll = 1
+        #self.min_value_controll = -1
+        #self.max_value_controll = 1
 
         # Aplicar um Multiplicador e converter para inteiro - Implementação específica
         self.multi = 10000
@@ -69,8 +70,8 @@ class DifferentialRobotController:
     def clamp_error(self, value):
         return max(min(value, self.max_value_error), self.min_value_error)
 
-    def clamp_controll(self, value):
-        return max(min(value, self.max_value_controll), self.min_value_controll)
+    def clamp_controll(self, value, min_value_controll, max_value_controll):
+        return max(min(value, max_value_controll), min_value_controll)
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita
@@ -111,17 +112,20 @@ class DifferentialRobotController:
         # rospy.loginfo(" [*] error_left: %lf error_right: %lf", error_left, error_right)
 
         # Implementa o controle feedforward com malha fechada
-        # Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left * 0.1
-        # Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right * 0.1
+        Vcontrol_left = self.Vl + self.Kp * error_left + self.error_sum_left * self.Ki
+        Vcontrol_right = self.Vr + self.Kp * error_right + self.error_sum_right * self.Ki
 
-        Vcontrol_left = self.Vl + self.Kp * error_left
-        Vcontrol_right = self.Vr + self.Kp * error_right
+        # Vcontrol_left = self.Vl + self.Kp * error_left
+        # Vcontrol_right = self.Vr + self.Kp * error_right
 
-        Vcontrol_left = self.Vl
-        Vcontrol_right = self.Vr
+        #Vcontrol_left = self.Vl
+        #Vcontrol_right = self.Vr
 
-        Vcontrol_left = self.clamp_controll(Vcontrol_left)
-        Vcontrol_right = self.clamp_controll(Vcontrol_right)
+        #min_value_controll = Vl * 0.5
+        #max_value_error = Vl * 0.5
+
+        Vcontrol_left = self.clamp_controll(Vcontrol_left, -abs(self.Vl*3.5), abs(self.Vl*3.5))
+        Vcontrol_right = self.clamp_controll(Vcontrol_right, -abs(self.Vr*3.5), abs(self.Vr*3.5))
 
         if self.Vl == 0:
             Vcontrol_left = 0
