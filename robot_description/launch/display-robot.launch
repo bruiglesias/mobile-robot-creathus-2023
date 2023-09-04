@@ -39,6 +39,6 @@
     </node>
 
     <!-- Differential Controller -->
-    <!-- <node name="robot_controller" pkg="robot_integrations" type="DifferentialRobotController.py" output= "screen"/> -->
+    <node name="robot_controller" pkg="robot_integrations" type="DifferentialRobotController.py" output= "screen"/>
 
 </launch>
