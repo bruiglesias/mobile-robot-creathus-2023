@@ -123,12 +123,12 @@ class DifferentialRobotController:
         #self.error_sum_right = self.clamp_error(error_sum_right)
 
         # Verifique se dt não é zero antes de calcular a derivada
-        if derivative_left != 0:
+        if self.encoder_dt != 0:
             derivative_left = (error_left - self.prev_error_left) / self.encoder_dt
         else:
             derivative_left = 0
 
-        if derivative_right != 0: 
+        if self.encoder_dt != 0: 
             derivative_right = (error_right - self.prev_error_right) / self.encoder_dt
         else:
             derivative_right = 0
