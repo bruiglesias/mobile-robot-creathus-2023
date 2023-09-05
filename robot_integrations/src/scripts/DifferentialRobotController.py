@@ -43,9 +43,9 @@ class DifferentialRobotController:
         self.R = 0.1016  # 0.1016 metros
 
         # Ganho proporcional para o controle da malha fechada
-        self.Kp = 0.4
-        self.Ki = 0.2
-        self.Kd = 0.1
+        self.Kp = 0.04
+        self.Ki = 0.02
+        self.Kd = 0.01
 
         # Variáveis de erro acumulado para o controle integral
         self.integral_left = []
@@ -137,14 +137,14 @@ class DifferentialRobotController:
         # rospy.loginfo(" [*] error_left: %lf error_right: %lf", error_left, error_right)
 
         # Implementa o controle feedforward com malha fechada
-        Vcontrol_left = self.Vl + (self.Kp * error_left) + (self.Ki * error_sum_left )
+        Vcontrol_left_test = self.Vl + (self.Kp * error_left) + (self.Ki * error_sum_left )
         Vcontrol_right = self.Vr + (self.Kp * error_right) + (self.Ki * error_sum_right)
 
         # Vcontrol_left = (self.Kp * error_left) + (self.Ki * error_sum_left ) + (self.Kd * derivative_left )
         # Vcontrol_right = (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
 
-        # Vcontrol_left = self.Vl
-        # Vcontrol_right = self.Vr
+        Vcontrol_left = self.Vl
+        Vcontrol_right = self.Vr
 
         #min_value_controll = Vl * 0.5
         #max_value_error = Vl * 0.5
@@ -164,7 +164,7 @@ class DifferentialRobotController:
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
-        cmd_vel_controlled.linear.x = Vcontrol_left  # Controle de Velocidade linear da roda direita em m/s
+        cmd_vel_controlled.linear.x = Vcontrol_left_test  # Controle de Velocidade linear da roda direita em m/s
         cmd_vel_controlled.linear.y = Vcontrol_right  # Controle de Velocidade linear da roda esquerda em m/s
         cmd_vel_controlled.linear.z = error_left # tempo sem segundos (s)
 
