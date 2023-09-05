@@ -12,14 +12,14 @@ class EncoderPublisher:
     def __init__(self):
         rospy.init_node('encoder_plc_publisher')
 
-        self.filter_window_size = 50
+        self.filter_window_size = 40
         self.encoder_history_left = [0] * self.filter_window_size
         self.encoder_history_right = [0] * self.filter_window_size
 
         # Parameters
         self.R = 0.1016
-        self.TPR_L = 980 #680
-        self.TPR_R = 980 #680
+        self.TPR_L = 1000 #680
+        self.TPR_R = 1000 #680
         self.PI = 3.14159265358979323846
 
         self.left_ticks = 0
