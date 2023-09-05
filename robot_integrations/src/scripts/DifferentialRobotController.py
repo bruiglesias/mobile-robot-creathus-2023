@@ -80,8 +80,8 @@ class DifferentialRobotController:
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita
-        self.encoder_left = self.clamp_error(msg.vector.x)
-        self.encoder_right = self.clamp_error(msg.vector.y)
+        self.encoder_left = self.clamp_error(msg.vector.x * 200)
+        self.encoder_right = self.clamp_error(msg.vector.y * 200)
 
         # self.encoder_left = msg.vector.x
         # self.encoder_right = msg.vector.y
@@ -110,8 +110,8 @@ class DifferentialRobotController:
         error_left = float(self.Vl - self.encoder_left)
         error_right = float(self.Vr - self.encoder_right)
 
-        self.integral_left.append(float(error_left * 100))
-        self.integral_right.append(float(error_right * 100))
+        self.integral_left.append(float(error_left * self.dt))
+        self.integral_right.append(float(error_right * self.dt))
 
         # Mantenha a lista de integral com no máximo 20 valores
         if len(self.integral_left) > self.max_integral_size:
