@@ -153,8 +153,8 @@ class DifferentialRobotController:
         Vcontrol_left_test = (self.Kp * error_left) + (self.Ki * error_sum_left ) + (self.Kd * derivative_left )
         Vcontrol_right_test = (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
 
-        Vcontrol_left = self.Vl
-        Vcontrol_right = self.Vr
+        # Vcontrol_left = self.Vl
+        # Vcontrol_right = self.Vr
 
         #min_value_controll = Vl * 0.5
         #max_value_error = Vl * 0.5
