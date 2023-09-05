@@ -21,11 +21,11 @@
 
     
     <!-- DATA IMU ESP32 -->
-<!--     <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
+    <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
         <param name="port" value="/dev/ttyACM0"/>  
-        <param name="baud" value="57600"/> -->
-        <!-- rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600 -->
-    <!-- </node> -->
+        <param name="baud" value="57600"/>
+        <!-- rosrun rosserial_python serial_node.py _port:=/dev/ttyACM0 _baud:=57600 -->
+    </node>
 
 
     <!-- DATA ENCODER -->
@@ -33,10 +33,10 @@
 
 
     <!-- ODOMETRY: IMU+ENCONDER -->
-<!--     <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen">
+    <node name="odom_hybrid" pkg="robot_integrations" type="odom_imu2" output= "screen">
         <param name="alpha" value="0.0" />
         <param name="use_imu" value="true" />
-    </node> -->
+    </node>
 
     <!-- Differential Controller -->
     <node name="robot_controller" pkg="robot_integrations" type="DifferentialRobotController.py" output= "screen"/>
