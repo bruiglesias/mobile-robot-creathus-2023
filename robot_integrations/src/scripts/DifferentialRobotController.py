@@ -43,7 +43,7 @@ class DifferentialRobotController:
         self.R = 0.1016  # 0.1016 metros
 
         # Ganho proporcional para o controle da malha fechada
-        self.Kp = 0.04
+        self.Kp = 0.2
         self.Ki = 0.02
         self.Kd = 0.01
 
@@ -140,8 +140,6 @@ class DifferentialRobotController:
             derivative_right = self.clamp_error_derivative(derivative_right)
         else:
             derivative_right = 0
-
-
 
         # print(f'DEBUG error_left: {error_left}  error_right {error_right} error_sum_left {self.error_sum_left} error_sum_right {self.error_sum_right}')
         # rospy.loginfo(" [*] error_left: %lf error_right: %lf", error_left, error_right)
