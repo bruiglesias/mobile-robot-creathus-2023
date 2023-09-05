@@ -28,7 +28,7 @@ class DifferentialRobotController:
         # Inicializa os valores dos encoders das rodas direita e esquerda
         self.encoder_right = 0
         self.encoder_left = 0
-        self.encoder_dt = 0
+        self.dt = 0
 
         self.Vl = 0
         self.Vr = 0
@@ -80,9 +80,12 @@ class DifferentialRobotController:
 
     def callbackEncoder(self, msg):
         # Atualiza a leitura do encoder da roda direita
-        self.encoder_left = msg.vector.x
-        self.encoder_right = msg.vector.y
-        self.encoder_dt = msg.vector.z
+        self.encoder_left = self.clamp_error(msg.vector.x)
+        self.encoder_right = self.clamp_error(msg.vector.y)
+
+        # self.encoder_left = msg.vector.x
+        # self.encoder_right = msg.vector.y
+        self.dt = msg.vector.z
 
         #rospy.loginfo(" [o] encoder_left: %lf encoder_right: %lf", self.encoder_left, self.encoder_right)
 
@@ -107,8 +110,8 @@ class DifferentialRobotController:
         error_left = float(self.Vl - self.encoder_left)
         error_right = float(self.Vr - self.encoder_right)
 
-        self.integral_left.append(error_left)
-        self.integral_right.append(error_right)
+        self.integral_left.append(float(error_left * 100))
+        self.integral_right.append(float(error_right * 100))
 
         # Mantenha a lista de integral com no máximo 20 valores
         if len(self.integral_left) > self.max_integral_size:
@@ -119,17 +122,14 @@ class DifferentialRobotController:
         error_sum_left = sum(self.integral_left)
         error_sum_right = sum(self.integral_right)
 
-        #self.error_sum_left = self.clamp_error(error_sum_left)
-        #self.error_sum_right = self.clamp_error(error_sum_right)
-
         # Verifique se dt não é zero antes de calcular a derivada
-        if self.encoder_dt != 0:
-            derivative_left = (error_left - self.prev_error_left) / self.encoder_dt
+        if self.dt != 0:
+            derivative_left = (error_left - self.prev_error_left) / self.dt
         else:
             derivative_left = 0
 
-        if self.encoder_dt != 0: 
-            derivative_right = (error_right - self.prev_error_right) / self.encoder_dt
+        if self.dt != 0: 
+            derivative_right = (error_right - self.prev_error_right) / self.dt
         else:
             derivative_right = 0
 
