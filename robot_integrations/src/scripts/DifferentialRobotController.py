@@ -150,8 +150,8 @@ class DifferentialRobotController:
         # Vcontrol_left = self.Vl + (self.Kp * error_left) + (self.Ki * error_sum_left )
         # Vcontrol_right = self.Vr + (self.Kp * error_right) + (self.Ki * error_sum_right)
 
-        Vcontrol_left_test = (self.Kp * error_left) + (self.Ki * error_sum_left ) + (self.Kd * derivative_left )
-        Vcontrol_right_test = (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
+        Vcontrol_left = (self.Kp * error_left) + (self.Ki * error_sum_left ) + (self.Kd * derivative_left )
+        Vcontrol_right = (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
 
         # Vcontrol_left = self.Vl
         # Vcontrol_right = self.Vr
@@ -174,8 +174,8 @@ class DifferentialRobotController:
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
-        cmd_vel_controlled.linear.x = Vcontrol_left_test  # Controle de Velocidade linear da roda direita em m/s
-        cmd_vel_controlled.linear.y = Vcontrol_right_test  # Controle de Velocidade linear da roda esquerda em m/s
+        cmd_vel_controlled.linear.x = Vcontrol_left  # Controle de Velocidade linear da roda direita em m/s
+        cmd_vel_controlled.linear.y = Vcontrol_right  # Controle de Velocidade linear da roda esquerda em m/s
         cmd_vel_controlled.linear.z = error_left # tempo sem segundos (s)
 
         cmd_vel_controlled.angular.x = self.Vl  # Referencia Velocidade linear da roda direita em m/s
