@@ -165,17 +165,17 @@ class DifferentialRobotController:
             Vcontrol_left = 0
             #self.max_integral_size = 0
         elif self.Vl > 0:
-            Vcontrol_left += 0.1
+            Vcontrol_left += 0.01
         else:
-            Vcontrol_left -= 0.1
+            Vcontrol_left -= 0.01
 
         if self.Vr == 0:
             Vcontrol_right = 0
             #self.max_integral_size = 0
-       elif self.Vl > 0:
-            Vcontrol_right += 0.1
+        elif self.Vr > 0:
+            Vcontrol_right += 0.01
         else:
-            Vcontrol_right -= 0.1
+            Vcontrol_right -= 0.01
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
