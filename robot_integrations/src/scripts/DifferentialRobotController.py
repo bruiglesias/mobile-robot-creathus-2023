@@ -50,7 +50,7 @@ class DifferentialRobotController:
         # Variáveis de erro acumulado para o controle integral
         self.integral_left = []
         self.integral_right = []
-        self.max_integral_size = 40
+        self.max_integral_size = 50
 
         self.signal_left = 0
         self.signal_right = 0
@@ -137,10 +137,10 @@ class DifferentialRobotController:
         # rospy.loginfo(" [*] error_left: %lf error_right: %lf", error_left, error_right)
 
         # Implementa o controle feedforward com malha fechada
-        Vcontrol_left_test = self.Vl + (self.Kp * error_left) + (self.Ki * error_sum_left )
+        # Vcontrol_left_test = self.Vl + (self.Kp * error_left) + (self.Ki * error_sum_left )
         Vcontrol_right = self.Vr + (self.Kp * error_right) + (self.Ki * error_sum_right)
 
-        # Vcontrol_left = (self.Kp * error_left) + (self.Ki * error_sum_left ) + (self.Kd * derivative_left )
+        Vcontrol_left_test = (self.Kp * error_left) + (self.Ki * error_sum_left ) + (self.Kd * derivative_left )
         # Vcontrol_right = (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
 
         Vcontrol_left = self.Vl
@@ -169,8 +169,8 @@ class DifferentialRobotController:
         cmd_vel_controlled.linear.z = error_left # tempo sem segundos (s)
 
         cmd_vel_controlled.angular.x = self.Vl  # Referencia Velocidade linear da roda direita em m/s
-        cmd_vel_controlled.angular.y = self.Vr  # Referencia Velocidade linear da roda esquerda em m/s
-        cmd_vel_controlled.angular.z = error_sum_left # tempo sem segundos (s)
+        cmd_vel_controlled.angular.y = error_sum_left  # Referencia Velocidade linear da roda esquerda em m/s
+        cmd_vel_controlled.angular.z = derivative_left # tempo sem segundos (s)
 
         # Publica os comandos de velocidade
         self.cmd_vel_pub.publish(cmd_vel_controlled)
