@@ -130,79 +130,78 @@ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 If you want to see the behavior of the low level pid control, use the tool `rqt_multiplot` and upload the file `~/amr_creathus_ws/src/runner/rqt_multiplot.xml`.
 
 ```
-rosrun rosrun rqt_multiplot rqt_multiplot
+bash runMultiPlot.sh 
 ```
 
-```
-rosrun base_controller base_controller
-```
-
-4. Run robot teleoperation automatically
+4. Run robot differential controller
 
 ```
-roslaunch arduino_controller teleop.launch
+rosrun robot_integrations DifferentialRobotController
 ```
 
-5. Test robot with Arduino and Encoder automatically
+5. Run robot Encoder Subscriber
 
 ```
-roslaunch arduino_controller test_encoder.launch
+rosrun robot_integrations EncoderSubscriber
 ```
 
 6. Rviz visualization
 
 ```
-rosrun rviz rviz -d ~/amr_creathus_ws/src/runner/arduino_controller/rviz/rviz_test_arduino.rviz
+bash runRviz.sh 
 ```
 
 Close the Arduino IDE and open again. Go to **sketchbook** in the Arduino IDE, and you will see the *ROS_LIB*
 
 Verify the *serial_port* connected. In our case is:
 
-> /dev/ttyACM0
+> /dev/ttyUSB2
 
-### MPU9250 - electric schematic
+### MPU6050 - electric schematic
 
-![MPU9250 - electric schematic](/images/mpu-eletric.png)
+![MPU6050 - electric schematic](/images/schematic-diagram.png)
 
-1. Implement ROS driver for several 9-DOF IMUs
+[Ref: ESP32 + MPU6050](https://github.com/akshaykulkarni07/esp32_imu)
 
-```
-mkdir -p ~/catkin_ws/src && cd ~/catkin_ws
+1. Implement ROS driver:
 
-catkin init
-
-cd ~/catkin_ws/src/ 
-
-git clone git@github.com:cesarhcq/i2c_imu.git
-
-cd ~/catkin_ws/
-
-catkin_make
-```
-
-Publishes [sensor_msgs::IMU](http://docs.ros.org/api/sensor_msgs/html/msg/Imu.html) messages at 10Hz to `/imu/data` topic. 
+Publishes [sensor_msgs::IMU](http://docs.ros.org/api/sensor_msgs/html/msg/Imu.html) messages at 100Hz to `/data/encoder`, `/data/encoder/filtered`, `/data/tick_encoder` topic. 
 
 Specifically populates `angular_velocity` & `linear_acceleration`
 
-2. Include in file of your roslaunch:
+2. Rosrun just rosserial_python:
 
 ```
-<!-- Gyro from MPU9250 -->
-<include file="$(find i2c_imu)/launch/i2c_imu_auto.launch"/>
+rosrun rosserial_python serial_node.py _port:=/dev/ttyUSB2 _baud:=57600
 ```
 
-3. Test control system along with wheel and gyro odometry
+3. Include in file of your roslaunch:
 
 ```
-roslaunch roslaunch base_controller controller_base.launch
+    <!-- DATA IMU ESP32 -->
+    <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">
+        <param name="port" value="/dev/ttyACM0"/>  
+        <param name="baud" value="57600"/>
+    </node>
+```
+
+3. Test control system along with wheel and gyro odometry in launch:
+
+```
+roslaunch robot_description display-robot.launch
 ```
 
 ```
-rosrun rviz rviz -d ~/guntherBot_ws/src/GuntherBot/arduino_controller/rviz/rviz_arduino_encoder_gyro.rviz
+bash runRviz.sh
 ```
 
-![guntherBOT](/images/guntherBOT_IMU.png)
+### Connections between ESP32 DevKit v1 and MPU6050 
+| ESP32 DevKit v1  | MPU6050 IMU sensor |
+| ------------- | ------------- |
+| 3V3  | VCC  |
+| GND  | GND  |
+| D21  | SDA  |
+| D22  | SCL  |
 
 
 ### WiFi connection between Robot and PC
@@ -211,21 +210,25 @@ The Robot has a WiFi access point.
 
 Assuming that:
 
-* Runner (IP: 10.42.0.1)
+* Robot (IP: 192.168.167.119)
 
-* PC (IP: 10.42.0.98)
+* PC (IP: 192.168.167.165)
 
 1. In the PC or Laptop, open a terminal and type the following command:
 
-```ssh -X ubuntu@10.42.0.1```
+```ssh creathus@192.168.167.119```
 
-```password:ubuntu```
+```password:creathus```
 
-2. In the same terminal of the SSH, type:
+2. In the same terminal of the SSH, type in .bashrc:
 
-```export ROS_MASTER_URI=http://10.42.0.1:11311```
+```
+export ROS_IP=192.168.167.165
 
-```export ROS_IP=10.42.0.1```
+export ROS_HOSTNAME=192.168.167.119
+
+export ROS_MASTER_URI=http://192.168.167.119:11311
+```
 
 Now, you can execute the launch file with roscore information
 
@@ -233,12 +236,21 @@ Now, you can execute the launch file with roscore information
 
 **Does not need to use ssh again!**
 
-```export ROS_MASTER_URI=http://10.42.0.1:11311```
+```
+export ROS_IP=192.168.167.165
 
-```export ROS_IP=10.42.0.98```
+export ROS_HOSTNAME=192.168.167.119
 
-```rosrun rviz rviz```
+export ROS_MASTER_URI=http://192.168.167.119:11311
+```
 
+4. Setting the file runRviz.sh and change the ip `export ROS_MASTER_URI=http://192.168.167.119:11311 && rosrun rviz rviz`:
+
+```
+cd ~/amr_creathus_ws/src/mobile-robot-creathus-2023
+
+bash runRviz.sh 
+```
 
 ### Config ros.h
 
