@@ -11,7 +11,7 @@
     <include file="$(find robot_description)/launch/state-robot.launch" />
 
    <!-- START SICKS-->	  
-   <!-- <include file="$(find robot_integrations)/src/launch/sick-lasers.launch" /> -->
+   <include file="$(find robot_integrations)/src/launch/sick-lasers.launch" />
 
     <!-- IRA LASERS FUSION -->
     <!-- <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" /> -->
