@@ -2,12 +2,6 @@
 
 Creathus AMR Robot is an autonomous robotic platform developed by [Creathus](https://creathus.org.br/) for classroom disinfection environments. Runner Robot is a differential drive mobile platform to perform different tasks in an indoor environments. Runner Robot is based on Robot Operating System (ROS) - see more in [ROS Wiki](https://www.ros.org/).
 
-## ROS Buildfarm Development Branches
-
-Runner Package | Noetic Devel
------------- | ------------- | ------------
-drwatson_ros | [![Build Status](https://travis-ci.org/cesarhcq/drwatson.svg?branch=cesar-working)](https://travis-ci.org/github/cesarhcq/drwatson) | [![Build Status](https://travis-ci.org/cesarhcq/drwatson.svg?branch=cesar-working)](https://travis-ci.org/github/cesarhcq/drwatson)
-
 ## Install dependencies and follow the installation instructions.
 
 - [x] ROS Noetic-devel: [ROS](http://wiki.ros.org/noetic/Installation/Ubuntu).
@@ -30,7 +24,7 @@ catkin init
 
 cd ~/amr_creathus_ws/src/ 
 
-git clone https://github.com/bruiglesias/mobile-robot-creathus-2023/tree/develop
+git clone git@github.com:bruiglesias/mobile-robot-creathus-2023.git
 
 cd ~/amr_creathus_ws/
 
