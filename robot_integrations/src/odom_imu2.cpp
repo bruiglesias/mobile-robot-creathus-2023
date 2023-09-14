@@ -187,7 +187,7 @@ int main(int argc, char** argv){
       //first, we'll publish the transform over tf
       geometry_msgs::TransformStamped odom_trans;
       odom_trans.header.stamp = current_time;
-      odom_trans.header.frame_id = "imu_link";
+      odom_trans.header.frame_id = "odom_link";
       odom_trans.child_frame_id = "base_link";
 
       odom_trans.transform.translation.x = x;
@@ -201,7 +201,7 @@ int main(int argc, char** argv){
       //next, we'll publish the odometry message over ROS
       nav_msgs::Odometry odom;
       odom.header.stamp = current_time;
-      odom.header.frame_id = "imu_link";
+      odom.header.frame_id = "odom_link";
 
       //set the position
       odom.pose.pose.position.x = x;
