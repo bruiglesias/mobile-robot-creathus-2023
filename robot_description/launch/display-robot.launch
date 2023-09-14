@@ -14,7 +14,7 @@
    <include file="$(find robot_integrations)/src/launch/sick-lasers.launch" />
 
     <!-- IRA LASERS FUSION -->
-    <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" />
+    <!-- <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" /> -->
 
     <!-- LASER ODOMETRY -->
     <!-- <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" /> -->
