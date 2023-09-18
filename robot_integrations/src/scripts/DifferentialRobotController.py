@@ -61,8 +61,8 @@ class DifferentialRobotController:
         self.min_value_error_derivative = -10
         self.max_value_error_derivative = 10
 
-        self.min_value_controll = -0.12
-        self.max_value_controll = 0.12
+        self.min_value_controll = -0.2
+        self.max_value_controll = 0.2
 
         self.prev_error_left = 0
         self.prev_error_right = 0

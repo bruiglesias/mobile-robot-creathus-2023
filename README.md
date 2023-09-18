@@ -198,6 +198,67 @@ bash runRviz.sh
 | D22  | SCL  |
 
 
+#### Test hectormapping or gmaping
+
+Check if you install package of hectormapping as dependence
+
+- [x] Hectormapping: [Package for SLAM](http://wiki.ros.org/hector_geotiff).
+
+```
+cd ~/amr_creathus_ws 
+
+source devel/setup.bash
+```
+
+```
+roslaunch robot_navigation gmapping.launch
+```
+
+or
+
+```
+roslaunch robot_navigation hectormapping.launch
+```
+
+Rviz visualization
+
+```
+rosrun rviz rviz -d ~/amr_creathus_ws/src/abrobot/base_controller/rviz/rviz_encoder_gyro.rviz
+```
+
+#### Mapping
+
+1. Navigate around the environment using Teleop Keyboard.
+
+```
+roslaunch robot_navigation teleop.launch
+```
+
+2. Saving the Map
+
+```
+rosrun map_server map_saver -f ~/amr_creathus_ws/src/mobile-robot-creathus-2023/robot_navigation/maps/new_map.yaml
+```
+
+3. Loading the map
+
+```
+roslaunch robot_navigation amcl_navigation.launch
+```
+
+4. Rviz visualization
+
+```
+rosrun rviz rviz -d ~/amr_creathus_ws/src/mobile-robot-creathus-2023/abrobot_navigation/rviz/robot_amcl_navigation.rviz
+```
+
+or
+
+```
+rosrun rviz rviz -d ~/abrobot_ws/src/abrobot/abrobot_navigation/rviz/amcl_real_navigation.rviz
+```
+
+
 ### WiFi connection between Robot and PC
 
 The Robot has a WiFi access point. 
