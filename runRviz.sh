@@ -13,4 +13,4 @@ docker run -it --net=host \
 	--env="XAUTHORITY=$XAUTH" \
 	--volume="$XAUTH:$XAUTH" \
 	--privileged --name \
-	container_rviz osrf/ros:noetic-desktop-full bash -c "export ROS_MASTER_URI=http://192.168.167.119:11311 && rosrun rviz rviz"
+	container_rviz osrf/ros:noetic-desktop-full bash -c "export ROS_MASTER_URI=http://192.168.117.119:11311 && rosrun rviz rviz"

@@ -23,8 +23,6 @@
         <param name="laser_z_min_value" value="-1.0"/>
         <param name="laser_z_max_value" value="1.0"/>
 
-
-
 	</node>
 
 </launch>
