@@ -43,9 +43,9 @@ class DifferentialRobotController:
         self.R = 0.1016  # 0.1016 metros
 
         # Ganho proporcional para o controle da malha fechada
-        self.Kp = 0.00 # 0.08
-        self.Ki = 0.6 # 0.8
-        self.Kd = 0.04
+        self.Kp = 1.2 # 0.08 / 0.0
+        self.Ki = 1.6 # 0.8 / 0.6
+        self.Kd = 0.4 # 0.0 / 0.04
 
         # Variáveis de erro acumulado para o controle integral
         self.integral_left = []
@@ -148,11 +148,11 @@ class DifferentialRobotController:
         # Vcontrol_left = self.Vl + (self.Kp * error_left) + (self.Ki * error_sum_left )
         # Vcontrol_right = self.Vr + (self.Kp * error_right) + (self.Ki * error_sum_right)
 
-        #Vcontrol_left = self.Vl + (self.Kp * error_left) + (self.Ki * error_sum_left) + (self.Kd * derivative_left)
-        #Vcontrol_right = self.Vr + (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
+        Vcontrol_left = (self.Vl * 0.4) + (self.Kp * error_left) + (self.Ki * error_sum_left) + (self.Kd * derivative_left)
+        Vcontrol_right = (self.Vr * 0.4) + (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
         # vl * 0.1
-        Vcontrol_left = self.Vl - self.Vl * 0.3 + (self.Kp * error_left) + (self.Ki * error_sum_left) + (self.Kd * derivative_left)
-        Vcontrol_right = self.Vr - self.Vr * 0.3 + (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
+        #Vcontrol_left = self.Vl - self.Vl * 0.3 + (self.Kp * error_left) + (self.Ki * error_sum_left) + (self.Kd * derivative_left)
+        #Vcontrol_right = self.Vr - self.Vr * 0.3 + (self.Kp * error_right) + (self.Ki * error_sum_right) + (self.Kd * derivative_right)
 
         #Vcontrol_left = self.clamp_controll(Vcontrol_left, -abs(self.Vl*5), abs(self.Vl*5))
         #Vcontrol_right = self.clamp_controll(Vcontrol_right, -abs(self.Vr*5), abs(self.Vr*5))
@@ -165,17 +165,17 @@ class DifferentialRobotController:
             Vcontrol_left = 0
             #self.max_integral_size = 0
         elif self.Vl > 0:
-            Vcontrol_left += 0.085 # 0.02
+            Vcontrol_left += 0.1 # 0.085
         else:
-            Vcontrol_left -= 0.085
+            Vcontrol_left -= 0.095 # 0.085
 
         if self.Vr == 0:
             Vcontrol_right = 0
             #self.max_integral_size = 0
         elif self.Vr > 0:
-            Vcontrol_right += 0.088
+            Vcontrol_right += 0.11 # 0.088
         else:
-            Vcontrol_right -= 0.086
+            Vcontrol_right -= 0.1 # 0.086
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
