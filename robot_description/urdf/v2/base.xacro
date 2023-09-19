@@ -3,7 +3,9 @@
 
     <xacro:include filename="$(find robot_description)/urdf/v2/caster_wheel.xacro" />
 
-    <!-- <link name="base_footprint"/> -->
+    <xacro:property name="ground_distance" value="0.05" />
+    
+    <link name="base_footprint"/>
         
     <!-- ==== BASE LINK ==== -->
     <link name="base_link">
@@ -30,13 +32,13 @@
 
     </link>
     
-<!-- 
+
     <joint name="base_joint" type="fixed">
         <parent link="base_footprint"/>
         <child link="base_link"/>
         <origin xyz="0.0 0.0 ${ground_distance}" rpy="0.0 0.0 0.0"/>
         <axis xyz="0.0 0.0 0.0" />
-    </joint> -->
+    </joint>
 
     
 </robot>
