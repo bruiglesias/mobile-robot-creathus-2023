@@ -29,7 +29,7 @@
 
 	<param name="/use_sim_time" value="false"/>
 
-	<include file="$(find hector_geotiff)/launch/geotiff_mapper.launch">
+	<include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">
         <arg name="trajectory_source_frame_name" value="scanmatcher_frame"/>
         <arg name="map_file_path" value="$(arg geotiff_map_file_path)"/>
     </include>

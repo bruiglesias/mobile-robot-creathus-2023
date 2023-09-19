@@ -61,8 +61,8 @@ class DifferentialRobotController:
         self.min_value_error_derivative = -10
         self.max_value_error_derivative = 10
 
-        self.min_value_controll = -0.2
-        self.max_value_controll = 0.2
+        self.min_value_controll = -0.28
+        self.max_value_controll = 0.28
 
         self.prev_error_left = 0
         self.prev_error_right = 0
@@ -165,17 +165,17 @@ class DifferentialRobotController:
             Vcontrol_left = 0
             #self.max_integral_size = 0
         elif self.Vl > 0:
-            Vcontrol_left += 0.05 # 0.02
+            Vcontrol_left += 0.085 # 0.02
         else:
-            Vcontrol_left -= 0.05
+            Vcontrol_left -= 0.085
 
         if self.Vr == 0:
             Vcontrol_right = 0
             #self.max_integral_size = 0
         elif self.Vr > 0:
-            Vcontrol_right += 0.05
+            Vcontrol_right += 0.088
         else:
-            Vcontrol_right -= 0.048
+            Vcontrol_right -= 0.086
 
         # Define os comandos de velocidade das rodas direita e esquerda
         cmd_vel_controlled = Twist()
