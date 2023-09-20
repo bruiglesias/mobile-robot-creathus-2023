@@ -5,6 +5,7 @@
     <arg name="map_file" default="$(find robot_navigation)/maps/kaon_sala1.yaml"/>
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
 
+
     <node pkg="amcl" type="amcl" name="amcl" output="screen">
 
         <param name="odom_frame_id" value="odom_link"/>
@@ -66,6 +67,8 @@
       <!-- static global costmap, static map provides size -->
       <rosparam file="$(find robot_navigation)/config/global_costmap_params.yaml" command="load" ns="global_costmap"/>
     
+
+
   </node>
 
 </launch>
