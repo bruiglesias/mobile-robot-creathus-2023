@@ -73,7 +73,7 @@ void handle_encoder(const geometry_msgs::Vector3Stamped& encoder) {
   encoder_right = encoder.vector.y;
   encoder_dt = encoder.vector.z;
 
-  //ROS_INFO("encoder_left %lf - encoder_right %lf", encoder.vector.x, encoder.vector.y);
+ // ROS_INFO("encoder_left %lf - encoder_right %lf", encoder.vector.x, encoder.vector.y);
 }
 
 // Gyro Function from Smartphone
@@ -106,7 +106,7 @@ int main(int argc, char** argv){
 
   ros::NodeHandle nh;
   ros::NodeHandle nh_private_("~");
-  ros::Subscriber enconder_sub = nh.subscribe("/data/enconder", 100, handle_encoder);
+  ros::Subscriber enconder_sub = nh.subscribe("/data/encoder", 100, handle_encoder);
   ros::Subscriber gyro_sub = nh.subscribe("/mpu6050_imu/data", 100, handle_gyro);
 
   ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("odom_imu_encoder", 50);

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- Map server -->
+    <arg name="map_file" default="$(find robot_navigation)/maps/kaon.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+    <!-- Localization-->
+    <node pkg="amcl" type="amcl" name="amcl" output="screen">
+        <!-- remap from="scan" to="front_scan"/ -->
+
+        <!-- Overall Filter -->
+        <param name="min_particles" value="50"/>
+        <param name="max_particles" value="300"/>
+        <param name="update_min_a" value="0.1"/>
+        <param name="update_min_d" value="0.25"/>
+
+        <!-- Laser -->
+        <param name="laser_max_beams" value="20"/>
+        <param name="laser_z_rand" value="0.05"/>
+        <param name="laser_z_hit" value="0.95"/>
+
+        <!-- Odometry -->
+        <param name="odom_model_type" value="diff-corrected"/>
+        <param name="base_frame_id" value="base_link"/>
+        <param name="global_frame_id" value="map"/>
+        <param name="odom_frame_id" value="odom_link"/>
+        <param name="odom_alpha1" value="0.05"/>
+        <param name="odom_alpha2" value="0.05"/>
+        <param name="odom_alpha3" value="0.05"/>
+        <param name="odom_alpha4" value="0.05"/>
+    </node>
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" args="_speed:=0.19 _turn:=0.19" name="teleop" output="screen" />
+</launch>
