@@ -1,5 +1,11 @@
-GlobalPlanner:
-   neutral_cost: 66
-   lethal_cost: 253
-   cost_factor: 0.55
+#GlobalPlanner:
+#   neutral_cost: 66
+#   lethal_cost: 253
+#   cost_factor: 0.55
 
+controller_frequency: 5.0
+recovery_behaviour_enabled: false
+
+NavfnROS:
+  allow_unknown: true 
+  default_tolerance: 0.04

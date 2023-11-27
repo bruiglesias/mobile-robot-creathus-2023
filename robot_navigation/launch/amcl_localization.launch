@@ -6,8 +6,17 @@
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
 
     <!-- Localization-->
+
+    <arg name="initial_pose_x" default="0.0"/>
+    <arg name="initial_pose_y" default="0.0"/>
+    <arg name="initial_pose_a" default="0.0"/>
+
     <node pkg="amcl" type="amcl" name="amcl" output="screen">
         <!-- remap from="scan" to="front_scan"/ -->
+
+	<param name="initial_pose_x" value="$(arg initial_pose_x)" />
+        <param name="initial_pose_y" value="$(arg initial_pose_y)" />
+        <param name="initial_pose_a" value="$(arg initial_pose_a)" />
 
         <!-- Overall Filter -->
         <param name="min_particles" value="50"/>
@@ -30,5 +39,7 @@
         <param name="odom_alpha3" value="0.05"/>
         <param name="odom_alpha4" value="0.05"/>
     </node>
+
+    <include file="$(find robot_navigation)/launch/robot_base.launch" />
     <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" args="_speed:=0.19 _turn:=0.19" name="teleop" output="screen" />
 </launch>
