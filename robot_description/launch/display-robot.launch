@@ -19,6 +19,8 @@
     <!-- LASER ODOMETRY -->
     <!-- <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" /> -->
 
+    <!-- LASER FILTER -->
+    <node name="front_laser_filter" pkg="robot_integrations" type="read_front_laser.py" output="screen"/>
     
     <!-- DATA IMU ESP32 -->
     <node name="imu_data" pkg="rosserial_python" type="serial_node.py" output= "screen">

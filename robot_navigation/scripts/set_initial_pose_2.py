@@ -14,7 +14,7 @@ def publish_initial_pose():
         initial_pose = PoseWithCovarianceStamped()
         initial_pose.header.stamp = rospy.Time.now()
         initial_pose.header.frame_id = "map"  # Substitua pelo frame_id apropriado
-        initial_pose.pose.pose.position.x = -1.75  # Substitua pelas coordenadas desejadas
+        initial_pose.pose.pose.position.x = 0.0  # Substitua pelas coordenadas desejadas
         initial_pose.pose.pose.position.y = 0.0
         initial_pose.pose.pose.position.z = 0.0
         initial_pose.pose.pose.orientation.x = 0.0
