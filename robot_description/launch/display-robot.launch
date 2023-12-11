@@ -42,10 +42,13 @@
 
     <!-- Differential Controller -->
     <node name="robot_controller" pkg="robot_integrations" type="DifferentialRobotController.py" output="screen"/>
+   
+    <!-- POINTS MANAGER -->
+    <node name="points_controller" pkg="robot_navigation" type="manager_goals.py" output="screen"/>
+    
+    <!-- MONTE CARLO LOCALIZATION -->
+    <include file="$(find robot_navigation)/launch/amcl_localization.launch" />
 
-
-   <node name="points_controller" pkg="robot_navigation" type="manager_goals.py" output="screen"/>
-
-   <include file="$(find robot_navigation)/launch/amcl_localization.launch" />
-
+    <!-- LOAD LAST POSE -->
+    <node name="robot_pose_saver" pkg="robot_navigation" type="saver_position_orientation.py" output="screen" />
 </launch>

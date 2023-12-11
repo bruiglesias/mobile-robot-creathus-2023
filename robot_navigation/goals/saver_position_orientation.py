@@ -53,8 +53,10 @@ class SaveRobotPosition:
 
         except FileNotFoundError:
             rospy.loginfo(f'Arquivo {file_name} não encontrado. Nenhuma posição inicial definida ainda.')
+            self.set_initial_pose(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         except Exception as e:
             rospy.logerr(f'Erro ao verificar o arquivo: {e}')
+
 
     def set_initial_pose(self, x, y, z, roll, pitch, yaw):
 
