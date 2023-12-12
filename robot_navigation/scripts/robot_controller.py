@@ -4,6 +4,7 @@ import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
+from tf.transformations import quaternion_from_euler, euler_from_quaternion
 
 class RobotController:
 
@@ -12,7 +13,7 @@ class RobotController:
         self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
 
     def controller(self):
-        
+
         while True:
             print()
             print("Choice a option:")
@@ -21,17 +22,17 @@ class RobotController:
             print("2. send_goal_and_no_wait")
             print("3. get current status")
             print("4. cancel current goal")
-            
+
             choice = int(input("You choice: "))
             print()
 
             if choice == 1:
-                x, y = str(input("Type X Y coords (0.0 0.0): ")).split(" ")
-                self.send_goal_and_wait(x, y)
+                x, y, yaw = str(input("Type X Y Yaw coords (0.0 0.0 0.0): ")).split(" ")
+                self.send_goal_and_wait(x, y, yaw)
 
             elif choice == 2:
-                x, y = str(input("Type X Y coords (0.0 0.0): ")).split(" ")
-                self.send_goal_and_no_wait(x, y)
+                x, y, yaw = str(input("Type X Y Yaw coords (0.0 0.0 0.0): ")).split(" ")
+                self.send_goal_and_no_wait(x, y, yaw)
 
             elif choice == 3:
                 result = self.client.get_state()
@@ -43,7 +44,7 @@ class RobotController:
 
                 if result == GoalStatus.ACTIVE:
                     print("ACTIVE: The goal is currently being processed by the action server")
-                
+
                 if result == GoalStatus.PREEMPTED:
                     print()
                     print("PREEMPTED: The goal received a cancel request after it started executing and has since completed its execution (Terminal State)")
@@ -94,8 +95,8 @@ class RobotController:
 
 
 
-    def send_goal_and_wait(self, x, y, z=1.0, w=0.0):
-    
+    def send_goal_and_wait(self, x, y, yaw):
+
         # Waits until the action server has started up and started listening for goals.
         self.client.wait_for_server()
 
@@ -103,22 +104,23 @@ class RobotController:
         goal = MoveBaseGoal()
         goal.target_pose.header.frame_id = "map"
         goal.target_pose.header.stamp = rospy.Time.now()
-        
+
+        quaternion = quaternion_from_euler(0, 0, float(yaw))
 
         goal.target_pose.pose.position.x = float(x)
         goal.target_pose.pose.position.y = float(y)
-        goal.target_pose.pose.orientation.z = float(z)
-        goal.target_pose.pose.orientation.w = float(w)
-            
+        goal.target_pose.pose.orientation.z = quaternion[2]
+        goal.target_pose.pose.orientation.w =  quaternion[3]
+
 
         # Sends the goal to the action server.
         self.client.send_goal(goal)
-        
+
         # Waits for the server to finish performing the action.
         wait = self.client.wait_for_result()
-        
+
         # If the result doesn't arrive, assume the Server is not available
-        
+
         if not wait:
             rospy.logerr("Action server not available!")
             rospy.signal_shutdown("Action server not available!")
@@ -127,8 +129,8 @@ class RobotController:
             return self.client.get_result()
 
 
-    def send_goal_and_no_wait(self, x, y, z=1.0, w=0.0):
-    
+    def send_goal_and_no_wait(self, x, y, yaw):
+
         # Waits until the action server has started up and started listening for goals.
         self.client.wait_for_server()
 
@@ -136,13 +138,14 @@ class RobotController:
         goal = MoveBaseGoal()
         goal.target_pose.header.frame_id = "map"
         goal.target_pose.header.stamp = rospy.Time.now()
-        
+
+        quaternion = quaternion_from_euler(0, 0, float(yaw))
 
         goal.target_pose.pose.position.x = float(x)
         goal.target_pose.pose.position.y = float(y)
-        goal.target_pose.pose.orientation.z = float(z)
-        goal.target_pose.pose.orientation.w = float(w)
-            
+        goal.target_pose.pose.orientation.z = quaternion[2]
+        goal.target_pose.pose.orientation.w =  quaternion[3]
+
 
         # Sends the goal to the action server.
         self.client.send_goal(goal)

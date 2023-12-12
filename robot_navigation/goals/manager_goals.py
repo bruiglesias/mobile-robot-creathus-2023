@@ -152,6 +152,6 @@ if __name__ == "__main__":
     delete_point = rospy.Service('/manager_goals/delete_point', Point , delete_point_callback)
 
 
-    sub_pose = rospy.Subscriber('/odom_link' , Odometry, subcriber_callback)
+    sub_pose = rospy.Subscriber('/odom_imu_encoder' , Odometry, subcriber_callback)
 
     rospy.spin()

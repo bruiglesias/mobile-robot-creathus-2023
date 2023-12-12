@@ -1,6 +1,7 @@
 TebLocalPlannerROS:
 
- odom_topic: odom_link
+ odom_topic: /odom_imu_encoder
+ map_frame: map
 
     
  # Trajectory
@@ -35,7 +36,7 @@ TebLocalPlannerROS:
 
  # GoalTolerance    
  xy_goal_tolerance: 0.1
- yaw_goal_tolerance: 0.05
+ yaw_goal_tolerance: 0.08
  free_goal_vel: True
  complete_global_plan: True
     
