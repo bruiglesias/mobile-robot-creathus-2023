@@ -43,7 +43,7 @@
     <!-- Differential Controller -->
     <node name="robot_controller" pkg="robot_integrations" type="DifferentialRobotController.py" output="screen"/>
    
-    <!-- POINTS MANAGER -->
+    <!--POINTS MANAGER -->
     <node name="points_controller" pkg="robot_navigation" type="manager_goals.py" output="screen"/>
     
     <!-- MONTE CARLO LOCALIZATION -->

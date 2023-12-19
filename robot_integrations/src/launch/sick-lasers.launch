@@ -3,6 +3,6 @@
 
     <node name="laser_front_node" pkg="cob_sick_s300" type="cob_sick_front" respawn="false" output="screen"/>
 
-    <node name="laser_back_node" pkg="cob_sick_s300" type="cob_sick_back" respawn="false" output="screen" />
+    <!-- node name="laser_back_node" pkg="cob_sick_s300" type="cob_sick_back" respawn="false" output="screen" /-->
 
 </launch>
