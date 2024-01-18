@@ -17,9 +17,9 @@
     <!--include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch" /-->
 
     <!-- LASER ODOMETRY -->
-    <!-- <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" /> -->
+    <!--include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" /> -->
 
-    <!-- LASER FILTER -->
+    <!-- LASER FILTER (REDUZ O ANGULO MAX DO LASER DA FRENTE ) -->
     <node name="front_laser_filter" pkg="robot_integrations" type="read_front_laser.py" output="screen"/>
     
     <!-- DATA IMU ESP32 -->
@@ -50,5 +50,12 @@
     <include file="$(find robot_navigation)/launch/amcl_localization.launch" />
 
     <!-- LOAD LAST POSE -->
-    <node name="robot_pose_saver" pkg="robot_navigation" type="saver_position_orientation.py" output="screen" />
+    <!-- node name="robot_pose_saver" pkg="robot_navigation" type="saver_position_orientation.py" output="screen" /-->
+
+    <!-- LASER ODOMETRY -->
+    <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch" />
+
+    <node name="robot_state_button_a" pkg="robot_integrations" type="read_state_button_a.py" output="screen"/>
+    <node name="robot_state_button_b" pkg="robot_integrations" type="read_state_button_b.py" output="screen"/>
+    <node name="robot_state_button_c" pkg="robot_integrations" type="read_state_button_c.py" output="screen"/>
 </launch>
