@@ -17,9 +17,9 @@ class SimpleRobotController:
         self.odom_subscriber = rospy.Subscriber('/odom_imu_encoder', Odometry, self.update_pose)
         self.pose = None
         self.rate = rospy.Rate(10)
-        self.trajectory_A = [[-1.0, 0.0], [-1.7,0.0], [0.0, 0.0]]  # Trajetória A
-        self.trajectory_B = [[0.0, 1.0],[0.0, 2.0],[0.0, 3.0],[0.0, 4.0], [5.0, 4.0], [5.0, 5.0]]  # Trajetória B
-        self.trajectory_C = [[-1.0, 0.0],[-2.0, 0.0],[-3.0, 0.0],[-4.0, 0.0], [-4.0, -5.0], [-5.0, -5.0]]  # Trajetória C
+        self.trajectory_A = [[-1.0, 0.0], [-1.7, 0.0, 1.57]]  # Trajetória A
+        self.trajectory_B = [[0.0, -1.0],[0.0, 0.0]]  # Trajetória B
+        self.trajectory_C = []  # Trajetória C
         self.trajectory = []
 
         self.obstacle_distances = [0.8, 0.6, 0.3, 0.3, 0.3, 0.3, 0.2, 0.3, 0.4, 0.4]
