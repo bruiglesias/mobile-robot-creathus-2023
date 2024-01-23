@@ -54,7 +54,7 @@ class SimpleRobotController:
         if self.pose is not None:
             dx = target_point[0] - self.pose[0]
             dy = target_point[1] - self.pose[1]
-            error_dist = math.sqrt(dx*2 + dy*2)
+            error_dist = math.sqrt(dx**2 + dy**2)
             error_ang = math.atan2(dy, dx) - self.pose[2]
             error_ang = self.normalize_angle(error_ang)
             return error_dist, error_ang
