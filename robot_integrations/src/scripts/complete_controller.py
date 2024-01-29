@@ -14,8 +14,9 @@ class SimpleRobotController:
     def __init__(self):
         rospy.init_node('simple_robot_controller', anonymous=True)
         self.vel_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
-        self.odom_subscriber = rospy.Subscriber('/odom_imu_encoder', Odometry, self.update_pose)
-        self.pose = None
+        self.odom_encoder_subscriber = rospy.Subscriber('/odom_imu_encoder', Odometry, self.update_pose_y_yaw)
+        self.odom_laser_subscriber = rospy.Subscriber('/odom_laser', Odometry, self.update_pose_x)
+        self.pose = [None, None, None]
         self.rate = rospy.Rate(10)
         self.trajectory_A = [[-3.2, 0.0], [-3.2, -7.0]]  # Trajetória A
         self.trajectory_B = [[-3.2, 0.0], [0.0, 0.0]]  # Trajetória B
@@ -53,11 +54,17 @@ class SimpleRobotController:
             self.destino_atual = destino
             print(f"Trajetória alterada para {destino}")
 
-    def update_pose(self, data):
+    def update_pose_x(self, data):
+        position = data.pose.pose.position
+        self.pose[0] = position.x
+
+
+    def update_pose_y_yaw(self, data):
         position = data.pose.pose.position
         orientation = data.pose.pose.orientation
         _, _, yaw = euler_from_quaternion([orientation.x, orientation.y, orientation.z, orientation.w])
-        self.pose = (position.x, position.y, yaw)
+        self.pose[1] = position.y
+        self.pose[2] = yaw
 
     def calculate_error(self, target_point):
 
