@@ -16,8 +16,8 @@ class SimpleRobotController:
         self.odom_subscriber = rospy.Subscriber('/odom_imu_encoder', Odometry, self.update_pose)
         self.pose = [None, None, None]
         self.rate = rospy.Rate(10)
-        self.trajectory_A = [[-3.2, 0.0, 90.0]]  # [[-3.2, 0.0, 0.0], [-3.2, -10.0, 90]]  # Trajetória A
-        self.trajectory_B = [[0.0, 0.0, 0.0]]  # Trajetória B
+        self.trajectory_A = [[-2.2, 0.0, -90.0], [-2.2, -6.0, -90]]  # [[-3.2, 0.0, 0.0], [-3.2, -10.0, 90]]  # Trajetória A
+        self.trajectory_B = [[-2.2, 0.0, 0.0], [0.0, 0.0, 0.0]]  # Trajetória B
         self.trajectory_C = []  # Trajetória C
         self.trajectory = []
 
@@ -85,7 +85,7 @@ class SimpleRobotController:
             return error_dist < threshold
 
     def adjust_angle(self, point):
-        
+        while not rospy.is_shutdown():
 
             if self.pose is None:
                 continue
@@ -109,19 +109,24 @@ class SimpleRobotController:
 
     def adjust_final_angle(self, destination_yaw):
         # Ajuste final do ângulo
+        print("Ajustando o angulo final")
         while not rospy.is_shutdown():
 
+            if self.check_obstacle_for_areas():
+                print("Obstáculo detectado! Parando o robô.")
+                self.stop_robot()
 
-            if abs(destination_yaw - self.pose[2]) < 0.01:
+            destination_yaw_rad = math.radians(destination_yaw)
+
+            if abs(destination_yaw_rad - self.pose[2]) < 0.01:
                 break
 
-            destination_yaw_rad = math.radians(destination_yaw) 
             cmd_vel = Twist()
-            cmd_vel.linear.x = 0.0 
-            cmd_vel.angular.z = self.kp_ang * (destination_yaw - self.pose[2]) if self.kp_ang * (destination_yaw - self.pose[2]) <= self.vel_max else self.vel_max
+            cmd_vel.linear.x = 0.0
+            cmd_vel.angular.z = self.kp_ang * (destination_yaw_rad - self.pose[2]) if self.kp_ang * (destination_yaw_rad - self.pose[2]) <= self.vel_max else self.vel_max
             self.vel_publisher.publish(cmd_vel)
-        
-        
+            self.rate.sleep()
+
     def stop_robot(self):
         cmd_vel = Twist()
         cmd_vel.linear.x = 0
