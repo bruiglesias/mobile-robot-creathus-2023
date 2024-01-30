@@ -58,4 +58,7 @@
     <node name="robot_state_button_a" pkg="robot_integrations" type="read_state_button_a.py" output="screen"/>
     <node name="robot_state_button_b" pkg="robot_integrations" type="read_state_button_b.py" output="screen"/>
     <node name="robot_state_button_c" pkg="robot_integrations" type="read_state_button_c.py" output="screen"/>
+
+    <!--PATH CONTROLLER-->
+    <node name="path_controller" pkg="robot_integrations" type="complete_controller.py" output="screen"/>
 </launch>
