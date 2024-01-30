@@ -16,8 +16,8 @@ class SimpleRobotController:
         self.odom_subscriber = rospy.Subscriber('/odom_imu_encoder', Odometry, self.update_pose)
         self.pose = [None, None, None]
         self.rate = rospy.Rate(10)
-        self.trajectory_A = [[-3.2, 0.0], [-3.2, -12.0]]  # Trajetória A
-        self.trajectory_B = [[-3.2, 0.0], [0.0, 0.0]]  # Trajetória B
+        self.trajectory_A = [[-3.2, 0.0, 0.0], [-3.2, -12.0, 90]]  # Trajetória A
+        self.trajectory_B = [[-3.2, 0.0, 0.0], [0.0, 0.0, 0.0]]  # Trajetória B
         self.trajectory_C = []  # Trajetória C
         self.trajectory = []
 
@@ -85,7 +85,7 @@ class SimpleRobotController:
             return error_dist < threshold
 
     def adjust_angle(self, point):
-        while not rospy.is_shutdown():
+        
 
             if self.pose is None:
                 continue
@@ -107,6 +107,21 @@ class SimpleRobotController:
             self.vel_publisher.publish(cmd_vel)
             self.rate.sleep()
 
+    def adjust_final_angle(self, destination_yaw):
+        # Ajuste final do ângulo
+        while not rospy.is_shutdown():
+
+
+            if abs(destination_yaw - self.pose[2]) < 0.01:
+                break
+
+            destination_yaw_rad = math.radians(destination_yaw) 
+            cmd_vel = Twist()
+            cmd_vel.linear.x = 0.0 
+            cmd_vel.angular.z = self.kp_ang * (destination_yaw - self.pose[2]) if self.kp_ang * (destination_yaw - self.pose[2]) <= self.vel_max else self.vel_max
+            self.vel_publisher.publish(cmd_vel)
+        
+        
     def stop_robot(self):
         cmd_vel = Twist()
         cmd_vel.linear.x = 0
@@ -213,6 +228,10 @@ class SimpleRobotController:
                                 self.rate.sleep()
 
                         if index == len(self.trajectory) - 1:
+                            self.stop_robot()
+                            self.rate.sleep()
+
+                            self.adjust_final_angle(point[2])
                             self.stop_robot()
                             self.rate.sleep()
                             print("Reached point: ", point)
