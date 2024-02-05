@@ -44,10 +44,10 @@
     <node name="robot_controller" pkg="robot_integrations" type="DifferentialRobotController.py" output="screen"/>
    
     <!--POINTS MANAGER -->
-    <node name="points_controller" pkg="robot_navigation" type="manager_goals.py" output="screen"/>
+    <!-- node name="points_controller" pkg="robot_navigation" type="manager_goals.py" output="screen"/-->
     
     <!-- MONTE CARLO LOCALIZATION -->
-    <include file="$(find robot_navigation)/launch/amcl_localization.launch" />
+    <!-- include file="$(find robot_navigation)/launch/amcl_localization.launch" /-->
 
     <!-- LOAD LAST POSE -->
     <!-- node name="robot_pose_saver" pkg="robot_navigation" type="saver_position_orientation.py" output="screen" /-->
@@ -60,5 +60,5 @@
     <node name="robot_state_button_c" pkg="robot_integrations" type="read_state_button_c.py" output="screen"/>
 
     <!--PATH CONTROLLER-->
-    <!-- node name="path_controller" pkg="robot_integrations" type="complete_controller.py" output="screen"/-->
+    <node name="path_controller" pkg="robot_integrations" type="complete_controller.py" output="screen"/>
 </launch>
