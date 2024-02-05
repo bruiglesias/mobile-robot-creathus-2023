@@ -10,10 +10,15 @@ from sensor_msgs.msg import LaserScan
 import time
 
 class SimpleRobotController:
+
     def __init__(self):
+
         rospy.init_node('simple_robot_controller', anonymous=True)
+
         self.vel_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
         self.odom_subscriber = rospy.Subscriber('/odom_imu_encoder', Odometry, self.update_pose)
+        self.take_control = rospy.Publisher('/take_control', Int32, queue_size=10)
+
         self.pose = [None, None, None]
         self.rate = rospy.Rate(10)
         self.trajectory_A = [[-2.2, 0.0, -90.0]] #, [-2.2, -6.0, -90]]  # [[-3.2, 0.0, 0.0], [-3.2, -10.0, 90]]  # Trajetória A
@@ -27,7 +32,7 @@ class SimpleRobotController:
         self.kp_ang = 0.3  # Ganho proporcional para ângulo
         self.vel_max = 0.2
 
-        self.destino_atual = None
+        self.current_goal = None
         self.reached_goal = False
         self.last_point_checked = None
 
@@ -37,20 +42,21 @@ class SimpleRobotController:
         # rostopic pub /buttonC std_msgs/Int32 "data: 0" -r 10
 
         # Assinando os tópicos dos botões
-        rospy.Subscriber('/buttonA', Int32, self.botao_callback, callback_args='A')
-        rospy.Subscriber('/buttonB', Int32, self.botao_callback, callback_args='B')
-        rospy.Subscriber('/buttonC', Int32, self.botao_callback, callback_args='C')
+        rospy.Subscriber('/buttonA', Int32, self.button_callback, callback_args='A')
+        rospy.Subscriber('/buttonB', Int32, self.button_callback, callback_args='B')
+        rospy.Subscriber('/buttonC', Int32, self.button_callback, callback_args='C')
 
-    def botao_callback(self, data, destino):
-        if data.data == 1 and self.destino_atual != destino:
-            if destino == 'A':
+    def button_callback(self, data, goal):
+        if data.data == 1 and self.current_goal != goal:
+            if goal == 'A':
                 self.trajectory = self.trajectory_A
-            elif destino == 'B':
+            elif goal == 'B':
                 self.trajectory = self.trajectory_B
-            elif destino == 'C':
+            elif goal == 'C':
                 self.trajectory = self.trajectory_C
-            self.destino_atual = destino
-            print(f"Trajetória alterada para {destino}")
+
+            self.destino_atual = goal
+            print(f"Trajetória alterada para {goal}")
 
     def update_pose(self, data):
         position = data.pose.pose.position
@@ -134,28 +140,6 @@ class SimpleRobotController:
         self.vel_publisher.publish(cmd_vel)
 
 
-    def check_obstacle(self, obstacle_distance, angle_range_deg):
-        laser_data = rospy.wait_for_message('/scan', LaserScan, timeout=5)  # Aguarda a próxima mensagem do tópico /scan
-        if laser_data is not None:
-            num_readings = len(laser_data.ranges)
-            middle_index = int(num_readings / 2)  # Índice central do scan
-
-            # Calcula os índices do scan correspondentes ao ângulo desejado
-            angle_range = int(angle_range_deg / laser_data.angle_increment)
-            start_index = max(0, middle_index - angle_range)  # Limita o início ao mínimo de 0
-            end_index = min(num_readings - 1, middle_index + angle_range)  # Limita o final ao máximo de num_readings - 1
-
-            # Verifica os obstáculos dentro do intervalo angular especificado
-            for i in range(start_index, end_index + 1):
-                if laser_data.ranges[i] < obstacle_distance:
-                    return True  # Obstáculo detectado a uma distância menor que obstacle_distance
-            return False  # Nenhum obstáculo detectado dentro do intervalo angular
-        else:
-            rospy.logwarn("Não foi possível receber os dados do laser!")
-
-
-# ... (código anterior)
-
     def check_obstacle_for_areas(self):
 
         laser_data = rospy.wait_for_message('/scan', LaserScan, timeout=5)  # Aguarda a próxima mensagem do tópico /scan
@@ -176,9 +160,6 @@ class SimpleRobotController:
 
             for index, region in enumerate(regions):
                 limit = self.obstacle_distances[index]
-                #print(index)
-                #print(region, limit, region <= limit)
-                #print()
                 if region <= limit:
                     print("O robô parou possivel colisão na região: ", index, " limite de aprox: ", limit, "m obstaculo: ", region, "m")
                     return True
@@ -188,7 +169,6 @@ class SimpleRobotController:
         else:
             rospy.logwarn("Não foi possível receber os dados do laser!")
 
-# ... (restante do código)
 
     def follow_trajectory(self):
 
@@ -221,16 +201,12 @@ class SimpleRobotController:
                             error_dist, error_ang = self.calculate_error(point)
 
                             cmd_vel = Twist()
-                            if True: #index == len(self.trajectory) - 1:
-                                cmd_vel.linear.x = self.kp_dist * error_dist if self.kp_dist * error_dist <= self.vel_max else self.vel_max
-                                cmd_vel.angular.z = self.kp_ang * error_ang  if self.kp_ang * error_ang <= self.vel_max else self.vel_max
-                                self.vel_publisher.publish(cmd_vel)
-                                self.rate.sleep()
-                            else:
-                                cmd_vel.linear.x = self.vel_max
-                                cmd_vel.angular.z = 0
-                                self.vel_publisher.publish(cmd_vel)
-                                self.rate.sleep()
+            
+                            cmd_vel.linear.x = self.kp_dist * error_dist if self.kp_dist * error_dist <= self.vel_max else self.vel_max
+                            cmd_vel.angular.z = self.kp_ang * error_ang  if self.kp_ang * error_ang <= self.vel_max else self.vel_max
+                            self.vel_publisher.publish(cmd_vel)
+                            self.rate.sleep()
+           
 
                         if index == len(self.trajectory) - 1:
                             self.stop_robot()
@@ -242,6 +218,8 @@ class SimpleRobotController:
                             print("Reached point: ", point)
                             self.trajectory = []
 
+                            if self.current_goal == 'C':
+                                self.take_control.publish(1)
 
                         self.rate.sleep()
 
