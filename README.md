@@ -102,6 +102,8 @@ cd <sketchbook>/libraries
 ```
 
 ```
+pip install rospkg
+
 rosrun rosserial_arduino make_libraries.py .
 ```
 
@@ -255,7 +257,7 @@ rosrun rviz rviz -d ~/amr_creathus_ws/src/mobile-robot-creathus-2023/abrobot_nav
 or
 
 ```
-rosrun rviz rviz -d ~/abrobot_ws/src/abrobot/abrobot_navigation/rviz/amcl_real_navigation.rviz
+rosrun rviz rviz -d ~/amr_creathus_ws/src/abrobot/abrobot_navigation/rviz/amcl_real_navigation.rviz
 ```
 
 
